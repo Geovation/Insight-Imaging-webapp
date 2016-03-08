@@ -27,7 +27,7 @@
         password : vm.password
       })
       .then(authHandler)
-      .catch(authErrorHandler)
+      .catch(authErrorHandler);
     }
 
     function authHandler(authData){
@@ -49,7 +49,7 @@
         password : vm.password
       })
       .then(registeredHandler)
-      .catch(registerErrorHandler)
+      .catch(registerErrorHandler);
 
     }
 
