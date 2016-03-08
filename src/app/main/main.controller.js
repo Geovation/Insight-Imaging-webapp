@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('test')
+    .module('insightImaging')
     .controller('MainController', MainController);
 
   /** @ngInject */

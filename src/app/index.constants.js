@@ -3,7 +3,7 @@
   'use strict';
 
   angular
-    .module('test')
+    .module('insightImaging')
     .constant('Firebase', Firebase)
     .constant('L',L);
 

@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "insight-imaging",
   "version": "0.0.0",
   "dependencies": {
     "angular-animate": "~1.4.2",
