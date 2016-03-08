@@ -8,6 +8,7 @@
 
 var gulp = require('gulp');
 var wrench = require('wrench');
+var gls = require('gulp-live-server');
 
 /**
  *  This will load all js or coffee files in the gulp directory
@@ -26,4 +27,12 @@ wrench.readdirSyncRecursive('./gulp').filter(function(file) {
  */
 gulp.task('default', ['clean'], function () {
   gulp.start('build');
+});
+
+
+// Build and serve using live reload
+gulp.task('serve', ['clean'], function(){
+    gulp.start('build');
+    var server = gls.static('dist'); //equals to gls.static('public', 3000);
+    server.start();
 });
