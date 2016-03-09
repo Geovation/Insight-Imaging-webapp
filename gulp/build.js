@@ -78,7 +78,21 @@ gulp.task('fonts', function () {
     .pipe(gulp.dest(path.join(conf.paths.dist, '/fonts/')));
 });
 
-gulp.task('other', function () {
+// Only applies for leaflet
+/*
+  Intended beahviour is that the images (*.png) from leaflet.draw are copied across to the
+  styles/images directory - in fact the code below unexpectedlty copies all *.png files from
+  any directory under bower_components
+*/
+gulp.task('leaflet', function () {
+  return gulp.src($.mainBowerFiles().concat('bower_components/leaflet.draw/dist/images/*'))
+    .pipe($.filter('**/*.{png,}'))
+    .pipe($.flatten())
+    .pipe(gulp.dest(path.join(conf.paths.dist, '/styles/images/')));
+
+});
+
+gulp.task('other', ['leaflet'], function () {
   var fileFilter = $.filter(function (file) {
     return file.stat.isFile();
   });
