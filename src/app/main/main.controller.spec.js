@@ -3,7 +3,9 @@
 
   describe('controllers', function(){
 
-    // tests go here
-
+    it("should return true", function() {
+        expect(true).toEqual(true);
+    });
+    
   });
 })();
