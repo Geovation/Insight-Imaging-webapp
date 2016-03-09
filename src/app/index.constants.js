@@ -1,10 +1,10 @@
-/* global malarkey:false, moment:false */
+/* global Firebase, L*/
 (function() {
   'use strict';
 
   angular
-    .module('test')
-    .constant('malarkey', malarkey)
-    .constant('moment', moment);
+    .module('insight-imaging-webapp')
+    .constant('Firebase', Firebase)
+    .constant('L',L);
 
 })();

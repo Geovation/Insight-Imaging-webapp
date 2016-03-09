@@ -1,34 +1,12 @@
-<div layout="vertical" layout-fill>
-
-  <md-content>
-    <header>
-      <acme-navbar creation-date="main.creationDate"></acme-navbar>
-    </header>
-
-    <section class="jumbotron">
-      <h1>'Allo, 'Allo!</h1>
-      <p class="lead">
-        <img src="assets/images/yeoman.png" alt="I'm Yeoman"><br>
-        Always a pleasure scaffolding your apps.
-      </p>
-      <md-button class="md-raised animated infinite" ng-class="main.classAnimation" ng-click="main.showToastr()">Splendid Toastr</md-button>
-      <p>
-        With ♥ thanks to the contributions of<acme-malarkey extra-values="['Yeoman', 'Gulp', 'Angular']"></acme-malarkey>
-      </p>
-    </section>
-
-    <div class="techs" layout-align="center">
-      <md-card ng-repeat="awesomeThing in main.awesomeThings | orderBy:'rank'">
-        <md-card-content>
-          <img class="pull-right" ng-src="assets/images/{{ awesomeThing.logo }}" alt="{{ awesomeThing.title }}">
-          <h3 class="md-title">{{ awesomeThing.title }}</h3>
-          <p>{{ awesomeThing.description }}</p>
-        </md-card-content>
-        <div class="md-action-buttons">
-          <md-button ng-href="{{ awesomeThing.url }}">Website</md-button>
+<div ng-controller="IndexController as vmIndex" style="height: 100%; margin: 0;padding: 0;">
+      <md-toolbar  style="float: left;width: 100%;position: absolute; top: 0; left: 0; height: 8%; ">
+        <div class="md-toolbar-tools" style="width:100%">
+          <span>Insight Imaging</span>
+          <span flex></span>
+          <md-button class="md-primary" ng-if="vmIndex.userAuth" ng-click="vmIndex.logout()" >
+            Log out ({{vmIndex.userAuth.password.email}})
+          </md-button>
         </div>
-      </md-card>
-    </div>
-  </md-content>
-
+      </md-toolbar>
+      <span flex id="map"  style="width: 100%; background: grey; height:92%; position:absolute; bottom:0;"></span>
 </div>

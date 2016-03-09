@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "insight-imaging-webapp",
   "version": "0.0.0",
   "dependencies": {},
   "scripts": {
@@ -34,6 +34,7 @@
     "gulp-less": "~3.0.3",
     "gulp-angular-filesort": "~1.1.1",
     "main-bower-files": "~2.9.0",
+    "gulp-live-server": "~0.0.29",
     "wiredep": "~2.2.2",
     "karma": "~0.13.10",
     "karma-jasmine": "~0.3.6",
