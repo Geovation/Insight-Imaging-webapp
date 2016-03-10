@@ -76,18 +76,24 @@
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
 
-      // Set the title to show on the polygon button
-      L.drawLocal.draw.toolbar.buttons.polygon = 'Draw a polygon!';
+      // Setup a drone marker
+      var droneMarker = L.Icon.extend({
+        options: {
+          shadowUrl: null,
+          iconAnchor: new L.Point(12, 12),
+          iconSize: new L.Point(35, 30),
+          iconUrl: 'app/main/assets/drone.png'
+        }
+      });
 
       var drawControl = new L.Control.Draw({
         position: 'topright',
         draw: {
-          circle: {
-            shapeOptions: {
-            color: '#662d91'
-            }
-          },
-          marker: false
+          polyline: false,
+          circle: false,
+          rectangle :false,
+          polygon: false,
+          marker: { icon: new droneMarker() }
         },
         edit: {
           featureGroup: drawnItems,
@@ -107,7 +113,7 @@
       restrict: 'E',
       templateUrl: 'app/main/map/map.directive.html',
       link: link
-    }
+    };
   }
 
 })();
