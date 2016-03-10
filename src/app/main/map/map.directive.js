@@ -76,16 +76,15 @@
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
 
-      // Set the title to show on the polygon button
-      //L.drawLocal.draw.toolbar.buttons.polygon = 'Draw a polygon!';
+      // Setup a drone marker
       var droneMarker = L.Icon.extend({
         options: {
-            shadowUrl: null,
-            iconAnchor: new L.Point(12, 12),
-            iconSize: new L.Point(35, 30),
-            iconUrl: 'app/main/assets/drone.png'
+          shadowUrl: null,
+          iconAnchor: new L.Point(12, 12),
+          iconSize: new L.Point(35, 30),
+          iconUrl: 'app/main/assets/drone.png'
         }
-    });
+      });
 
       var drawControl = new L.Control.Draw({
         position: 'topright',
