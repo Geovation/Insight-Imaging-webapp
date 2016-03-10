@@ -8,7 +8,7 @@
   function iiMap(L) {
     function link(scope, element, attrs) {
       var osAttrib = '&copy; <a href="https://www.os.uk/copyright">Ordnance Survey</a>';
-      var osKey = 'FBgTnDiN4gVpi2a1tGAnWpvXEXcnHOlN'
+      var osKey = 'FBgTnDiN4gVpi2a1tGAnWpvXEXcnHOlN';
       var osUrlRoad = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Road 3857/{z}/{x}/{y}.png?key='+osKey;
       var osRoad = L.tileLayer(osUrlRoad, {id: 'OS Road', maxZoom: 20, attribution: osAttrib});
 
@@ -24,7 +24,7 @@
       //var osUrlOpenData = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/OpenData 3857/{z}/{x}/{y}.png?key='+osKey;
       //var osOpenData = L.tileLayer(osUrlOpenData, {id: 'OS OpenData', maxZoom: 18, attribution: osAttrib});
 
-      var googleAttrib = '&copy; <a href="http://maps.google.com">Google</a>'
+      var googleAttrib = '&copy; <a href="http://maps.google.com">Google</a>';
       var googleTileUrl = 'https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}';
       var google = L.tileLayer(googleTileUrl, {id: 'Google', maxZoom: 20, attribution: googleAttrib});
 
@@ -97,7 +97,7 @@
         },
         edit: {
           featureGroup: drawnItems,
-          remove: false
+          remove: true
         }
       });
 
