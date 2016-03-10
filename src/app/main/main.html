@@ -1,12 +1,4 @@
-<div ng-controller="IndexController as vmIndex" style="height: 100%; margin: 0;padding: 0;">
-      <md-toolbar  style="float: left;width: 100%;position: absolute; top: 0; left: 0; height: 8%; ">
-        <div class="md-toolbar-tools" style="width:100%">
-          <span>Insight Imaging</span>
-          <span flex></span>
-          <md-button class="md-primary" ng-if="vmIndex.userAuth" ng-click="vmIndex.logout()" >
-            Log out ({{vmIndex.userAuth.password.email}})
-          </md-button>
-        </div>
-      </md-toolbar>
-      <span flex id="map"  style="width: 100%; background: grey; height:92%; position:absolute; bottom:0;"></span>
+<div ng-controller="IndexController as vmIndex" style="height: 100%; margin: 0; padding: 0;">
+  <ii-nav></ii-nav>
+  <ii-map></ii-map>
 </div>
