@@ -1,7 +1,6 @@
 # Insight Imaging
 
 ## Setup
-
     npm install
     bower install
 
