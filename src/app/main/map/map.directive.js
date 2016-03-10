@@ -3,9 +3,9 @@
 
   angular
     .module('insight-imaging-webapp')
-    .directive('laMap', laMap);
+    .directive('iiMap', iiMap);
 
-  function laMap(L) {
+  function iiMap(L) {
     function link(scope, element, attrs) {
       var osAttrib = '&copy; <a href="https://www.os.uk/copyright">Ordnance Survey</a>';
       var osKey = 'FBgTnDiN4gVpi2a1tGAnWpvXEXcnHOlN'
@@ -104,7 +104,6 @@
     }
 
     return {
-      priority: 2,
       restrict: 'E',
       templateUrl: 'app/main/map/map.directive.html',
       link: link

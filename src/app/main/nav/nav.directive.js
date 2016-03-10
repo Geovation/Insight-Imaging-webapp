@@ -3,11 +3,10 @@
 
   angular
     .module('insight-imaging-webapp')
-    .directive('laNav', laNav);
+    .directive('iiNav', iiNav);
 
-  function laNav() {
+  function iiNav() {
     return {
-      priority: 2,
       restrict: 'E',
       templateUrl: 'app/main/nav/nav.directive.html'
     }
