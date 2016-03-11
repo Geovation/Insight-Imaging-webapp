@@ -5,7 +5,7 @@
     .module('insight-imaging-webapp')
     .directive('iiMap', iiMap);
 
-  function iiMap(L) {
+  function iiMap(L, firebaseService) {
     function link(scope, element, attrs) {
       var osAttrib = '&copy; <a href="https://www.os.uk/copyright">Ordnance Survey</a>';
       var osKey = 'FBgTnDiN4gVpi2a1tGAnWpvXEXcnHOlN';
@@ -72,7 +72,6 @@
 
       L.control.layers(baseLayers, overlays).addTo(map);
 
-      // attempt to add drawing tools starts here
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
 
@@ -100,12 +99,13 @@
           remove: true
         }
       });
-
       map.addControl(drawControl);
 
-      map.on('draw:created', function (e) {
-        var layer = e.layer;
-        drawnItems.addLayer(layer);
+      map.on('draw:created', function (event) {
+        drawnItems.addLayer(event.layer);
+        firebaseService.saveMarker({
+          coords: event.layer._latlng
+        });
       });
     }
 
