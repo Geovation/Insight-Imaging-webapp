@@ -6,7 +6,7 @@
     .directive('iiMap', iiMap);
 
   function iiMap(L, firebaseService) {
-    function link(scope, element, attrs) {
+    function link(scope) {
       var osAttrib = '&copy; <a href="https://www.os.uk/copyright">Ordnance Survey</a>';
       var osKey = 'FBgTnDiN4gVpi2a1tGAnWpvXEXcnHOlN';
       var osUrlRoad = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Road 3857/{z}/{x}/{y}.png?key='+osKey;
@@ -21,9 +21,6 @@
       var osUrlNight = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Night 3857/{z}/{x}/{y}.png?key='+osKey;
       var osNight = L.tileLayer(osUrlNight, {id: 'OS Night', maxZoom: 20, attribution: osAttrib});
 
-      //var osUrlOpenData = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/OpenData 3857/{z}/{x}/{y}.png?key='+osKey;
-      //var osOpenData = L.tileLayer(osUrlOpenData, {id: 'OS OpenData', maxZoom: 18, attribution: osAttrib});
-
       var googleAttrib = '&copy; <a href="http://maps.google.com">Google</a>';
       var googleTileUrl = 'https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}';
       var google = L.tileLayer(googleTileUrl, {id: 'Google', maxZoom: 20, attribution: googleAttrib});
@@ -31,18 +28,18 @@
       var googleUrlSat ='http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}';
 
       var googleSat = L.tileLayer(googleUrlSat,{
-          id:'GoogleSat',
-          maxZoom: 20,
-          subdomains:['mt0','mt1','mt2','mt3'],
-          attribution: googleAttrib
+        id:'GoogleSat',
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3'],
+        attribution: googleAttrib
       });
 
       var googleUrlTerrain = 'http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
       var googleTerrain = L.tileLayer(googleUrlTerrain,{
-          id:'GoogleTerrain',
-          maxZoom: 15,
-          subdomains:['mt0','mt1','mt2','mt3'],
-          attribution: googleAttrib
+        id:'GoogleTerrain',
+        maxZoom: 15,
+        subdomains:['mt0','mt1','mt2','mt3'],
+        attribution: googleAttrib
       });
 
       var osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
@@ -50,18 +47,14 @@
       var osm = L.tileLayer(osmTileUrl, {id: 'OSM', maxZoom: 19, attribution: osmAttrib});
 
       var baseLayers = {
-          "OS Outdoor": osOutdoor,
-          "OS Road": osRoad,
-          "OS Light": osLight,
-          "OS Night": osNight,
-          //"OS OpenData": osOpenData
-          "OpenStreetMap" : osm,
-          "Google Maps" : google,
-          "Google Sat" : googleSat,
-          "GoogleTerrain" : googleTerrain
-      };
-
-      var overlays = {
+        'OS Outdoor': osOutdoor,
+        'OS Road': osRoad,
+        'OS Light': osLight,
+        'OS Night': osNight,
+        'OpenStreetMap': osm,
+        'Google Maps': google,
+        'Google Sat': googleSat,
+        'Google Terrain': googleTerrain
       };
 
       var map = L.map('map', {
@@ -70,12 +63,11 @@
         layers: [osRoad]
       });
 
-      L.control.layers(baseLayers, overlays).addTo(map);
+      L.control.layers(baseLayers).addTo(map);
 
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
 
-      // Setup a drone marker
       var droneMarker = L.Icon.extend({
         options: {
           shadowUrl: null,
@@ -90,7 +82,7 @@
         draw: {
           polyline: false,
           circle: false,
-          rectangle :false,
+          rectangle: false,
           polygon: false,
           marker: { icon: new droneMarker() }
         },
@@ -100,6 +92,14 @@
         }
       });
       map.addControl(drawControl);
+
+      map.whenReady(function () {
+        firebaseService.loadUserMarkers().then(function (markers) {
+          Object.keys(markers).forEach(function (key) {
+            L.marker([markers[key].coords.lat, markers[key].coords.lng], { icon: new droneMarker() }).addTo(map);
+          });
+        });
+      });
 
       map.on('draw:created', function (event) {
         drawnItems.addLayer(event.layer);
@@ -114,6 +114,7 @@
       templateUrl: 'app/main/map/map.directive.html',
       link: link
     };
+
   }
 
 })();

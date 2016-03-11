@@ -17,7 +17,8 @@
       authenticate: authenticate,
       register: register,
       deauthenticate: deauthenticate,
-      saveMarker: saveMarker
+      saveMarker: saveMarker,
+      loadUserMarkers: loadUserMarkers
     }
 
     /**
@@ -62,6 +63,18 @@
     function saveMarker(marker) {
       var uid = service.firebase.getAuth().uid;
       return service.firebase.child('users').child(uid).child('jobs').push(marker);
+    }
+
+    /**
+     * Load all the markers for the current user.
+     * @returns {Promise<array<object>>} A promised array of marker objects.
+     */
+    function loadUserMarkers(cb) {
+      var uid = service.firebase.getAuth().uid;
+      return new Promise(function (resolve, reject) {
+        service.firebase.child('users').child(uid).child('jobs')
+          .on('value', function (response) { resolve(response.val()); });
+      });
     }
 
     /**
