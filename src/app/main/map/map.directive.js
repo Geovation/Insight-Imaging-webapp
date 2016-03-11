@@ -96,7 +96,8 @@
       map.whenReady(function () {
         firebaseService.loadUserMarkers().then(function (markers) {
           Object.keys(markers).forEach(function (key) {
-            L.marker([markers[key].coords.lat, markers[key].coords.lng], { icon: new droneMarker() }).addTo(map);
+            var coords = [markers[key].coords.lat, markers[key].coords.lng];
+            L.marker(coords, { icon: new droneMarker() }).addTo(map);
           });
         });
       });
