@@ -12,21 +12,30 @@
 
     vm.authenticate = authenticate;
     vm.register = register;
-    vm.logout = logout;
+    vm.deauthenticate = deauthenticate;
     vm.userAuth = firebaseService.auth.$getAuth();
 
+    /**
+     * Authenticate a user.
+     */
     function authenticate() {
       firebaseService.authenticate(vm.email, vm.password)
-        .then(function (userAuth) { vm.userAuth = userAuth })
+        .then(function (userAuth) { vm.userAuth = userAuth; });
     }
 
+    /**
+     * Register a user.
+     */
     function register() {
       firebaseService.register(vm.email, vm.password)
-        .then(function (userAuth) { vm.userAuth = userAuth })
+        .then(function (userAuth) { vm.userAuth = userAuth; });
     }
 
-    function logout() {
-      vm.userAuth = firebaseService.logout();
+    /**
+     * Deauthenticate a user.
+     */
+    function deauthenticate() {
+      vm.userAuth = firebaseService.deauthenticate();
       $window.location.reload();
     }
 

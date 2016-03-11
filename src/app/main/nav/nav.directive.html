@@ -1,7 +1,7 @@
 <md-toolbar style="float: left; width: 100%; position: absolute; top: 0; left: 0; height: 8%;">
-  <div class="md-toolbar-tools" style="width:100%">
+  <div class="md-toolbar-tools" style="width: 100%">
     <span>Insight Imaging</span>
-    <md-button class="md-primary" ng-if="vmIndex.userAuth" ng-click="vmIndex.logout()">
+    <md-button class="md-primary" ng-if="vmIndex.userAuth" ng-click="vmIndex.deauthenticate()">
       Log out ({{vmIndex.userAuth.password.email}})
     </md-button>
   </div>
