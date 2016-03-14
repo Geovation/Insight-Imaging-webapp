@@ -87,21 +87,22 @@
         },
         edit: {
           featureGroup: drawnItems,
+          edit: false,
           remove: true
         }
       });
       map.addControl(drawControl);
 
       function addMarker(key, marker) {
-        var icon = droneMarker.extend({ options: { className: 'marker-' + marker.progress } })
+        var icon = droneMarker.extend({ options: { className: 'marker-' + marker.progress } });
         var mark = L.marker(marker.coords, { key: key, icon: new icon });
         var circle = new L.circle(marker.coords, 50, { color: 'red', fillColor: 'red', fillOpacity: 0.5 });
-        map.on('layerremove', function () {
-          circle.setStyle({ opacity: 0, fillOpacity: 0 })
-        })
-        map.on('layeradd', function () {
-          circle.setStyle({ opacity: 1, fillOpacity: 0.5 })
-        })
+        mark.on('remove', function () {
+          circle.setStyle({ opacity: 0, fillOpacity: 0 });
+        });
+        mark.on('add', function () {
+          circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
+        });
         drawnItems.addLayer(mark);
         map.addLayer(circle);
         map.addLayer(mark);
