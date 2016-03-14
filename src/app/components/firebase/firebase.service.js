@@ -18,6 +18,7 @@
       register: register,
       deauthenticate: deauthenticate,
       saveMarker: saveMarker,
+      deleteMarker: deleteMarker,
       loadUserMarkers: loadUserMarkers
     }
 
@@ -63,6 +64,19 @@
     function saveMarker(marker) {
       var uid = service.firebase.getAuth().uid;
       return service.firebase.child('users').child(uid).child('jobs').push(marker);
+    }
+
+    /**
+     * Delete a marker from the database.
+     * @param {string} markerKey
+     * @returns {Promise<null>} Once the marker has been removed.
+     */
+    function deleteMarker(markerKey) {
+      console.log('deleting',markerKey)
+      var uid = service.firebase.getAuth().uid;
+      return new Promise(function (resolve, reject) {
+        service.firebase.child('users').child(uid).child('jobs').child(markerKey).remove(resolve);
+      })
     }
 
     /**
