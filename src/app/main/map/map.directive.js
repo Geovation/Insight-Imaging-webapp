@@ -92,10 +92,16 @@
       });
       map.addControl(drawControl);
 
-      function addMarker(marker) {
+      function addMarker(key, marker) {
         var icon = droneMarker.extend({ options: { className: 'marker-' + marker.progress } })
-        var mark = L.marker(marker.coords, { icon: new icon });
+        var mark = L.marker(marker.coords, { key: key, icon: new icon });
         var circle = new L.circle(marker.coords, 50, { color: 'red', fillColor: 'red', fillOpacity: 0.5 });
+        map.on('layerremove', function () {
+          circle.setStyle({ opacity: 0, fillOpacity: 0 })
+        })
+        map.on('layeradd', function () {
+          circle.setStyle({ opacity: 1, fillOpacity: 0.5 })
+        })
         drawnItems.addLayer(mark);
         map.addLayer(circle);
         map.addLayer(mark);
@@ -104,7 +110,7 @@
       map.whenReady(function () {
         firebaseService.loadUserMarkers().then(function (markers) {
           if (markers) Object.keys(markers).forEach(function (key) {
-            addMarker(markers[key])
+            addMarker(key, markers[key])
           });
         });
       });
@@ -114,8 +120,14 @@
           coords: event.layer._latlng,
           progress: 'backlog'
         }
-        addMarker(marker);
-        firebaseService.saveMarker(marker);
+        firebaseService.saveMarker(marker)
+          .then(function (result) { addMarker(result.key(), marker); })
+      });
+
+      map.on('draw:deleted', function (event) {
+        event.layers.eachLayer(function (layer) {
+          firebaseService.deleteMarker(layer.options.key)
+        });
       });
 
     }
