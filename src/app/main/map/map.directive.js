@@ -70,8 +70,7 @@
 
       var droneMarker = L.Icon.extend({
         options: {
-          shadowUrl: null,
-          iconAnchor: new L.Point(12, 12),
+          iconAnchor: new L.Point(17, 15),
           iconSize: new L.Point(35, 30),
           iconUrl: 'app/main/assets/drone.png'
         }
@@ -96,8 +95,10 @@
       map.whenReady(function () {
         firebaseService.loadUserMarkers().then(function (markers) {
           Object.keys(markers).forEach(function (key) {
+            console.log(markers[key])
             var coords = [markers[key].coords.lat, markers[key].coords.lng];
-            L.marker(coords, { icon: new droneMarker() }).addTo(map);
+            var icon = droneMarker.extend({ options: { className: 'marker-' + markers[key].progress } })
+            L.marker(coords, { icon: new icon }).addTo(map);
           });
         });
       });
@@ -105,7 +106,8 @@
       map.on('draw:created', function (event) {
         drawnItems.addLayer(event.layer);
         firebaseService.saveMarker({
-          coords: event.layer._latlng
+          coords: event.layer._latlng,
+          progress: 'backlog'
         });
       });
     }
