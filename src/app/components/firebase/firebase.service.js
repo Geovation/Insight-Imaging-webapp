@@ -17,10 +17,11 @@
       authenticate: authenticate,
       register: register,
       deauthenticate: deauthenticate,
+      getUserName : getUserName,
       saveMarker: saveMarker,
       deleteMarker: deleteMarker,
       loadUserMarkers: loadUserMarkers
-    }
+  };
 
     /**
      * Authenticate a user.
@@ -57,6 +58,16 @@
     }
 
     /**
+     * Returns the User Name of the currently logged in user.
+     * @returns {object} Ther user name of the currently logged in user.
+     */
+    function getUserName() {
+      var email = service.firebase.getAuth().password.email;
+      return email;
+    }
+
+
+    /**
      * Save a marker to the database.
      * @param {object} marker
      * @returns {object} A reference to the saved object in Firebase.
@@ -72,11 +83,10 @@
      * @returns {Promise<null>} Once the marker has been removed.
      */
     function deleteMarker(markerKey) {
-      console.log('deleting',markerKey)
       var uid = service.firebase.getAuth().uid;
       return new Promise(function (resolve, reject) {
         service.firebase.child('users').child(uid).child('jobs').child(markerKey).remove(resolve);
-      })
+      });
     }
 
     /**
@@ -101,7 +111,7 @@
       return false;
     }
 
-    return service
+    return service;
 
   }
 

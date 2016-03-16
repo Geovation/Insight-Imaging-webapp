@@ -5,7 +5,7 @@
 // bower:less
 // endbower
 
-@import url(//fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:400,700,700italic,400italic);
+@import url(//fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:400,700,700italic,400italic|Open+Sans:400);
 
 @font-face {
   font-family: 'Material Icons';
@@ -44,8 +44,9 @@
   font-feature-settings: 'liga';
 }
 
-html {
-  font-family: 'Roboto Slab', serif;
+html, body {
+  font-family: 'Roboto', serif;
+  background-color: #272727;
 }
 
 [layout=row] {
@@ -65,13 +66,13 @@ html {
 }
 
 md-toolbar.md-default-theme {
-  background-color: black;
+  background-color: #272727;
 }
 
 section.jumbotron {
   margin-bottom: 30px;
   padding: 1px 30px;
-  background-color: #5aadbb;
+  background-color: #272727;
   text-align: center;
 
   color: white;
@@ -96,7 +97,7 @@ section.jumbotron {
 }
 
 .marker-backlog {
-  background: red;
+  background: #FF6060;
   border-radius: 50%;
 }
 
@@ -108,6 +109,27 @@ section.jumbotron {
 .marker-done {
   background: green;
   border-radius: 50%;
+}
+
+.ii-survey-dialog {
+  width: 400px;
+}
+
+.ii-survey-dialog button {
+  margin: auto;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  display: block;
+}
+
+.ii-survey-dialog h1 {
+  text-align: center;
+}
+
+.ii-survey-dialog.description {
+  resize: vertical;
 }
 
 /**
