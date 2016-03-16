@@ -39,7 +39,7 @@
       function _init() {
 
           var baseLayers = baseLayersService.baseLayers;
-          var markerDetails;
+          var deleting;
 
           map = L.map('map', {
             center: [51.5252, -0.0902],
@@ -85,6 +85,14 @@
             });
           });
 
+          map.on('draw:deletestart', function (event) {
+            deleting = true;
+          });
+
+          map.on('draw:deletestop', function(event) {
+            deleting = false;
+          });
+
           map.on('draw:created', function (event) {
             var marker = {
               coords: event.layer._latlng,
@@ -92,11 +100,7 @@
               properties: undefined
             };
 
-            $mdDialog.show({
-              templateUrl: "app/main/map/dialog.html",
-              controller : DialogController,
-              controllerAs : "vm"
-            }).then(function(markerDetails){
+            showDialog().then(function(markerDetails){
               marker.properties = markerDetails;
               firebaseService.saveMarker(marker)
                 .then(function (result) {
@@ -113,6 +117,18 @@
           });
 
 
+          function showDialog(properties) {
+            return $mdDialog.show({
+              templateUrl: "app/main/map/dialog.html",
+              controller : DialogController,
+              controllerAs : "vm",
+              bindToController : true,
+              locals: {
+                 properties : properties
+               }
+            });
+          }
+
           /**
            * addMarker - Adds a marker to the map representing a drone
            *
@@ -120,16 +136,27 @@
            * @param  {Object} marker an object containing coords and a progress status
            */
           function addMarker(key, marker) {
-            console.log(key, marker);
+
             var icon = droneMarker.extend({ options: { className: 'marker-' + marker.progress } });
             var mark = L.marker(marker.coords, { key: key, icon: new icon() });
-            var circle = new L.circle(marker.coords, 50, { color: 'red', fillColor: 'red', fillOpacity: 0.5 });
+            var circle = new L.circle(marker.coords, 50, { color: '#FF6060', fillColor: '#FF6060', fillOpacity: 0.5 });
+
             mark.on('remove', function () {
               circle.setStyle({ opacity: 0, fillOpacity: 0 });
             });
             mark.on('add', function () {
               circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
             });
+
+            mark.on('click', function(){
+              if (!deleting) {
+                showDialog(marker.properties).then(function(markerDetails){
+
+                });
+              }
+            });
+
+
             drawnItems.addLayer(mark);
             map.addLayer(circle);
             map.addLayer(mark);
@@ -141,15 +168,28 @@
            *
            * @return {Object} - The survey data returned from the inputs
            */
-          function DialogController() {
+          function DialogController(properties) {
               var vm = this;
 
-              vm.surveyRequester = firebaseService.getUserName(); // Perhaps  try to auto complete?
-              vm.dateRequested = new Date();
-              vm.surveyIdentifier = null;
-              vm.surveyDescription = null;
+              if (properties) {
+                vm.surveyRequester = properties.surveyRequester; // Perhaps  try to auto complete?
+                vm.dateRequested = properties.dateRequested;
+                vm.surveyIdentifier = properties.surveyIdentifier ;
+                vm.surveyDescription = properties.surveyDescription;
+                vm.surveyImageryUrl = properties.surveyImageryUrl;
+              }
+              else {
+                vm.surveyRequester = firebaseService.getUserName(); // Perhaps  try to auto complete?
+                vm.dateRequested = new Date();
+                vm.surveyIdentifier = null;
+                vm.surveyDescription = null;
+                vm.surveyImageryUrl = null;
+
+              }
+
               vm.onChange = onChange;
               vm.closeDialog = closeDialog;
+
 
               function onChange() {
                 //console.log(vm.name);

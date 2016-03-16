@@ -6,47 +6,59 @@
     .service('baseLayersService', baseLayersService);
 
   /** @ngInject */
-  function baseLayersService(L) {
-      
-    var osAttrib = '&copy; <a href="https://www.os.uk/copyright">Ordnance Survey</a>';
-    var osKey = 'FBgTnDiN4gVpi2a1tGAnWpvXEXcnHOlN';
-    var osUrlRoad = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Road 3857/{z}/{x}/{y}.png?key='+osKey;
-    var osRoad = L.tileLayer(osUrlRoad, {id: 'OS Road', maxZoom: 20, attribution: osAttrib});
+  function baseLayersService(L, osKey, baseLayerUrl, baseLayerAttr) {
 
-    var osUrlOutdoor = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Outdoor 3857/{z}/{x}/{y}.png?key='+osKey;
-    var osOutdoor = L.tileLayer(osUrlOutdoor, {id: 'OS Outdoor', maxZoom: 20, attribution: osAttrib});
+    // Ordnance Survey
+    var osRoad = L.tileLayer(baseLayerUrl["OS Road"] + osKey, {
+      id: 'OS Road',
+      maxZoom: 20,
+      attribution: baseLayerAttr["OS"]
+    });
+    var osOutdoor = L.tileLayer(baseLayerUrl["OS Outdoor"] + osKey, {
+      id: 'OS Outdoor',
+      maxZoom: 20,
+      attribution: baseLayerAttr["OS"]
+    });
+    var osLight = L.tileLayer(baseLayerUrl["OS Light"] + osKey, {
+      id: 'OS Light',
+      maxZoom: 20,
+      attribution: baseLayerAttr["OS"]
+    });
+    var osNight = L.tileLayer(baseLayerUrl["OS Night"] + osKey, {
+      id: 'OS Night',
+      maxZoom: 20,
+      attribution: baseLayerAttr["OS"]
+    });
 
-    var osUrlLight = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Light 3857/{z}/{x}/{y}.png?key='+osKey;
-    var osLight = L.tileLayer(osUrlLight, {id: 'OS Light', maxZoom: 20, attribution: osAttrib});
+    // Google
+    var google = L.tileLayer(baseLayerUrl["Google"], {
+      id: 'Google',
+      maxZoom: 20,
+      attribution: baseLayerAttr["Google"]
+    });
 
-    var osUrlNight = 'https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Night 3857/{z}/{x}/{y}.png?key='+osKey;
-    var osNight = L.tileLayer(osUrlNight, {id: 'OS Night', maxZoom: 20, attribution: osAttrib});
-
-    var googleAttrib = '&copy; <a href="http://maps.google.com">Google</a>';
-    var googleTileUrl = 'https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}';
-    var google = L.tileLayer(googleTileUrl, {id: 'Google', maxZoom: 20, attribution: googleAttrib});
-
-    var googleUrlSat ='http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}';
-
-    var googleSat = L.tileLayer(googleUrlSat,{
+    var googleSat = L.tileLayer(baseLayerUrl["Google Sat"],{
       id:'GoogleSat',
       maxZoom: 20,
-      subdomains:['mt0','mt1','mt2','mt3'],
-      attribution: googleAttrib
+      subdomains: ['mt0','mt1','mt2','mt3'],
+      attribution: baseLayerAttr["Google"]
     });
 
-    var googleUrlTerrain = 'http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
-    var googleTerrain = L.tileLayer(googleUrlTerrain,{
+    var googleTerrain = L.tileLayer(baseLayerUrl["Google Terrain"],{
       id:'GoogleTerrain',
       maxZoom: 15,
-      subdomains:['mt0','mt1','mt2','mt3'],
-      attribution: googleAttrib
+      subdomains: ['mt0','mt1','mt2','mt3'],
+      attribution: baseLayerAttr["Google"]
     });
 
-    var osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-    var osmTileUrl = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osm = L.tileLayer(osmTileUrl, {id: 'OSM', maxZoom: 19, attribution: osmAttrib});
+    // OSM
+    var osm = L.tileLayer(baseLayerUrl["OSM"], {
+      id: 'OSM',
+      maxZoom: 19,
+      attribution: baseLayerAttr["OSM"]
+    });
 
+    // Tie them all together in an object
     var baseLayers = {
       'OS Outdoor': osOutdoor,
       'OS Road': osRoad,
