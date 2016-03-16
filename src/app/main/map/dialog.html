@@ -1,0 +1,25 @@
+<div flex layout-padding>
+    <h1> Survey Details </h1>
+    <div layout="row" layout-padding >
+        <span flex="50"> Survey Requester </span>
+        <input ng-model="vm.surveyRequester" ng-change="vm.onChange()" flex="50" type="text" name="survey-name"></input>
+    </div>
+    <div layout="row" layout-padding >
+        <span flex="50"> Survey Request Date  </span>
+        <input ng-model="vm.dateRequested" ng-change="vm.onChange()" flex="50" type="text" name="survey-date"></input>
+    </div>
+    <div layout="row" layout-padding >
+        <span flex="50"> Survey Identifier </span>
+        <input ng-model="vm.surveyIdentifier" ng-change="vm.onChange()" flex="50" type="text" name="survey-name"></input>
+    </div>
+    <div layout="row" layout-padding >
+        <span flex="50"> Survey Description </span>
+        <input ng-model="vm.surveyDescription" ng-change="vm.onChange()" flex="50" type="text" name="survey-date"></input>
+    </div>
+    <div layout-padding >
+      <md-divider></md-divider>
+      <md-button ng-click="vm.closeDialog()" layout-padding  layout-align="center center">
+        Save Survey
+      </md-button>
+    </div>
+</div>

@@ -5,7 +5,8 @@
     .module('insight-imaging-webapp')
     .controller('MainController', MainController);
 
-  function MainController() {
+  function MainController(L) {
+
   }
 
 })();
