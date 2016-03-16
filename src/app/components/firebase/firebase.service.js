@@ -20,6 +20,7 @@
       getUserName : getUserName,
       saveMarker: saveMarker,
       deleteMarker: deleteMarker,
+      updateMarkerProperties : updateMarkerProperties,
       loadUserMarkers: loadUserMarkers
   };
 
@@ -78,6 +79,19 @@
     }
 
     /**
+     * Update a markers proprties in the database.
+     * @param {object} marker
+     * @returns {object} A reference to the saved object in Firebase.
+     */
+    function updateMarkerProperties(markerKey, properties) {
+      var uid = service.firebase.getAuth().uid;
+      return new Promise(function (resolve, reject) {
+        service.firebase.child('users').child(uid).child('jobs')
+          .child(markerKey).child("properties").set(properties);
+      });
+    }
+
+    /**
      * Delete a marker from the database.
      * @param {string} markerKey
      * @returns {Promise<null>} Once the marker has been removed.
@@ -85,7 +99,8 @@
     function deleteMarker(markerKey) {
       var uid = service.firebase.getAuth().uid;
       return new Promise(function (resolve, reject) {
-        service.firebase.child('users').child(uid).child('jobs').child(markerKey).remove(resolve);
+        service.firebase.child('users').child(uid).child('jobs')
+          .child(markerKey).remove(resolve);
       });
     }
 

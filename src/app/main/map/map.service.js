@@ -150,12 +150,12 @@
 
             mark.on('click', function(){
               if (!deleting) {
-                showDialog(marker.properties).then(function(markerDetails){
-
+                showDialog(marker.properties).then(function(updatedProperties){
+                  marker.properties = updatedProperties;
+                  firebaseService.updateMarkerProperties(key, updatedProperties);
                 });
               }
             });
-
 
             drawnItems.addLayer(mark);
             map.addLayer(circle);
@@ -180,10 +180,10 @@
               }
               else {
                 vm.surveyRequester = firebaseService.getUserName(); // Perhaps  try to auto complete?
-                vm.dateRequested = new Date();
-                vm.surveyIdentifier = null;
-                vm.surveyDescription = null;
-                vm.surveyImageryUrl = null;
+                vm.dateRequested = new Date().getTime();
+                vm.surveyIdentifier = "";
+                vm.surveyDescription = "";
+                vm.surveyImageryUrl = "";
 
               }
 
@@ -201,7 +201,6 @@
                   "dateRequested"     : vm.dateRequested,
                   "surveyIdentifier"  : vm.surveyIdentifier,
                   "surveyDescription" : vm.surveyDescription
-
                 });
               }
 
