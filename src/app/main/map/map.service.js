@@ -96,13 +96,11 @@
               templateUrl: "app/main/map/dialog.html",
               controller : DialogController,
               controllerAs : "vm"
-            }).then(function(){
-              //console.log(markerDetails);
+            }).then(function(markerDetails){
               marker.properties = markerDetails;
               firebaseService.saveMarker(marker)
                 .then(function (result) {
                   addMarker(result.key(), marker);
-                  markerDetails = undefined;
                 });
             });
 
@@ -113,7 +111,6 @@
               firebaseService.deleteMarker(layer.options.key);
             });
           });
-
 
 
           /**
@@ -147,8 +144,8 @@
           function DialogController() {
               var vm = this;
 
-              vm.surveyRequester = null; // Perhaps  try to auto complete?
-              vm.dateRequested = getDateTimeStamp();
+              vm.surveyRequester = firebaseService.getUserName(); // Perhaps  try to auto complete?
+              vm.dateRequested = new Date();
               vm.surveyIdentifier = null;
               vm.surveyDescription = null;
               vm.onChange = onChange;
@@ -159,46 +156,18 @@
               }
 
               function closeDialog() {
-                markerDetails = {
-                  "surveyRequester" : vm.surveyRequester,
-                  "dateRequested" : vm.dateRequested,
-                  "surveyIdentifier" : vm.surveyIdentifier,
+                $mdDialog.hide({
+                  "surveyRequester"   : vm.surveyRequester,
+                  "dateRequested"     : vm.dateRequested,
+                  "surveyIdentifier"  : vm.surveyIdentifier,
                   "surveyDescription" : vm.surveyDescription
 
-                };
-                $mdDialog.hide();
+                });
               }
 
           }
 
-
-          /**
-           * getDateTimeStamp - get the current date and time stamp
-           *
-           * @return {string}  a time stamp represented as a string
-           */
-          function getDateTimeStamp() {
-            var currentDate = new Date();
-            var mins = currentDate.getMinutes();
-            var secs = currentDate.getSeconds();
-            if (mins < 10) {
-              mins = "0" + mins;
-            }
-            if (secs < 10) {
-              secs = "0" + secs;
-            }
-            var dateTime =  currentDate.getDate() + "/" +
-                            (currentDate.getMonth()+1)  + "/" +
-                            currentDate.getFullYear() + " @ " +
-                            currentDate.getHours() + ":" +
-                            mins + ":" + secs;
-
-            return dateTime;
-          }
-
       }
-
-
 
   }
 

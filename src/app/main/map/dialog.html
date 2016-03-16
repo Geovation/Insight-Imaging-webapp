@@ -1,21 +1,33 @@
-<div flex layout-padding>
+<div class="ii-survey-dialog" layout-padding flex="100">
     <h1> Survey Details </h1>
-    <div layout="row" layout-padding >
-        <span flex="50"> Survey Requester </span>
-        <input ng-model="vm.surveyRequester" ng-change="vm.onChange()" flex="50" type="text" name="survey-name"></input>
+    <div layout="row" flex="100" layout-padding>
+        <span flex="100" > Survey Requester </span>
     </div>
-    <div layout="row" layout-padding >
-        <span flex="50"> Survey Request Date  </span>
-        <input ng-model="vm.dateRequested" ng-change="vm.onChange()" flex="50" type="text" name="survey-date"></input>
+    <div layout="row" flex="100" layout-padding >
+      <input  flex="100" disabled type="text" name="survey-date" value="{{vm.surveyRequester}}">
     </div>
-    <div layout="row" layout-padding >
-        <span flex="50"> Survey Identifier </span>
-        <input ng-model="vm.surveyIdentifier" ng-change="vm.onChange()" flex="50" type="text" name="survey-name"></input>
+
+    <div layout="row" flex="100" layout-padding >
+        <span flex="100"> Survey Request Date  </span>
     </div>
-    <div layout="row" layout-padding >
-        <span flex="50"> Survey Description </span>
-        <input ng-model="vm.surveyDescription" ng-change="vm.onChange()" flex="50" type="text" name="survey-date"></input>
+    <div layout="row" flex="100" layout-padding >
+        <input disabled flex="100" type="text" name="survey-date" value="{{ vm.dateRequested | date : 'dd/MM/yy - hh:mm:ss' }}">
     </div>
+
+    <div layout="row" flex="100" layout-padding >
+      <span flex="100"> Survey Identifier </span>
+    </div>
+    <div layout="row" flex="100" layout-padding >
+      <input ng-model="vm.surveyIdentifier" ng-change="vm.onChange()" flex="100" type="text" name="survey-name">
+    </div>
+
+    <div layout="row" flex="100" layout-padding >
+      <span flex="100"> Survey Description </span>
+    </div>
+    <div layout="row" flex="100" layout-padding >
+      <textarea class="description" ng-model="vm.surveyDescription" ng-change="vm.onChange()" flex="100" type="text" name="survey-date"></textarea>
+    </div>
+
     <div layout-padding >
       <md-divider></md-divider>
       <md-button ng-click="vm.closeDialog()" layout-padding  layout-align="center center">

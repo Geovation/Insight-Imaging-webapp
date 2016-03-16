@@ -17,6 +17,7 @@
       authenticate: authenticate,
       register: register,
       deauthenticate: deauthenticate,
+      getUserName : getUserName,
       saveMarker: saveMarker,
       deleteMarker: deleteMarker,
       loadUserMarkers: loadUserMarkers
@@ -55,6 +56,16 @@
       service.auth.$unauth();
       return false;
     }
+
+    /**
+     * Returns the User Name of the currently logged in user.
+     * @returns {object} Ther user name of the currently logged in user.
+     */
+    function getUserName() {
+      var email = service.firebase.getAuth().password.email;
+      return email;
+    }
+
 
     /**
      * Save a marker to the database.
