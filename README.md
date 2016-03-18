@@ -1,4 +1,5 @@
 # Insight Imaging
+[![Circle CI](https://circleci.com/gh/Geovation/Insight-Imaging-webapp.svg?style=svg)](https://circleci.com/gh/Geovation/Insight-Imaging-webapp)
 
 ## Setup
 
