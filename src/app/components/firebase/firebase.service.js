@@ -80,8 +80,9 @@
 
     /**
      * Update a markers proprties in the database.
-     * @param {object} marker
-     * @returns {object} A reference to the saved object in Firebase.
+     * @param {string} markerKey Key for the marker in firebase
+     * @param {object} properties The new properties for the marker
+     * @returns {Promise} A reference to the saved object in Firebase.
      */
     function updateMarkerProperties(markerKey, properties) {
       var uid = service.firebase.getAuth().uid;
@@ -94,7 +95,7 @@
     /**
      * Delete a marker from the database.
      * @param {string} markerKey
-     * @returns {Promise<null>} Once the marker has been removed.
+     * @returns {Promise} Once the marker has been removed.
      */
     function deleteMarker(markerKey) {
       var uid = service.firebase.getAuth().uid;

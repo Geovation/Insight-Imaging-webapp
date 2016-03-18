@@ -47,6 +47,7 @@
             layers: [ baseLayers["OS Road"] ]
           });
 
+          // Fix for map resize
           angular.element(document).ready(function() {
               map.invalidateSize();
             });
@@ -155,8 +156,8 @@
             mark.on('click', function(){
               if (!deleting) {
                 showDialog(marker.properties).then(function(updatedProperties){
-                  marker.properties = updatedProperties;
-                  firebaseService.updateMarkerProperties(key, updatedProperties);
+                  marker.properties = updatedProperties; // Update clientside marker properties
+                  firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
                 });
               }
             });
@@ -175,20 +176,19 @@
           function DialogController(properties) {
               var vm = this;
 
-              if (properties) {
-                vm.surveyRequester = properties.surveyRequester; // Perhaps  try to auto complete?
+              if (properties) { // Properties already exists
+                vm.surveyRequester = properties.surveyRequester;
                 vm.dateRequested = properties.dateRequested;
                 vm.surveyIdentifier = properties.surveyIdentifier ;
                 vm.surveyDescription = properties.surveyDescription;
-                vm.surveyImageryUrl = properties.surveyImageryUrl;
+                vm.surveyImageryUrl = "https://upload.wikimedia.org/wikipedia/commons/3/35/Gujarat_Satellite_Imagery_2012.jpg"; //properties.surveyImageryUrl;
               }
-              else {
+              else { // Creating dialog for the first time
                 vm.surveyRequester = firebaseService.getUserName(); // Perhaps  try to auto complete?
                 vm.dateRequested = new Date().getTime();
                 vm.surveyIdentifier = "";
                 vm.surveyDescription = "";
                 vm.surveyImageryUrl = "";
-
               }
 
               vm.onChange = onChange;
