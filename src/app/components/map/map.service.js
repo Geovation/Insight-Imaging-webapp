@@ -47,6 +47,10 @@
             layers: [ baseLayers["OS Road"] ]
           });
 
+          angular.element(document).ready(function() {
+              map.invalidateSize();
+            });
+
           L.control.layers(baseLayers).addTo(map);
 
           drawnItems = new L.FeatureGroup();
@@ -119,7 +123,7 @@
 
           function showDialog(properties) {
             return $mdDialog.show({
-              templateUrl: "app/main/map/dialog.html",
+              templateUrl: "app/components/dialog/dialog.html",
               controller : DialogController,
               controllerAs : "vm",
               bindToController : true,
