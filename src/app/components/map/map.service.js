@@ -66,9 +66,9 @@
             iconLoading: 'material-icons' // class for loading icon}).addTo(map);
           }).addTo(map);
 
-          var sign = document.querySelector(".leaflet-control-locate .material-icons");
-          sign.innerHTML = "location_searching";
-          console.log(sign);
+          document
+            .querySelector(".leaflet-control-locate .material-icons")
+            .innerHTML = "location_searching";
 
           angular.element(document).find(".material-icons").text("location_searching");
           L.control.layers(baseLayers).addTo(map);
