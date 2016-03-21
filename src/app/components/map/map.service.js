@@ -40,6 +40,7 @@
 
           var baseLayers = baseLayersService.baseLayers;
           var deleting;
+          var editing;
 
           map = L.map('map', {
             center: [51.5252, -0.0902],
@@ -76,7 +77,7 @@
             },
             edit: {
               featureGroup: drawnItems,
-              edit: false,
+              edit: true,
               remove: true
             }
           });
@@ -96,6 +97,14 @@
 
           map.on('draw:deletestop', function(event) {
             deleting = false;
+          });
+
+          map.on('draw:editstart', function (event) {
+            editing = true;
+          });
+
+          map.on('draw:editstop', function(event) {
+            editing = false;
           });
 
           map.on('draw:created', function (event) {
@@ -146,6 +155,7 @@
             var mark = L.marker(marker.coords, { key: key, icon: new icon() });
             var circle = new L.circle(marker.coords, 50, { color: '#FF6060', fillColor: '#FF6060', fillOpacity: 0.5 });
 
+            // Change style to see through when we delete and then visible when we add
             mark.on('remove', function () {
               circle.setStyle({ opacity: 0, fillOpacity: 0 });
             });
@@ -153,6 +163,7 @@
               circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
             });
 
+            // If we click on a marker and not deleting show the dialog box with the marker info
             mark.on('click', function(){
               if (!deleting) {
                 showDialog(marker.properties).then(function(updatedProperties){
@@ -162,6 +173,19 @@
               }
             });
 
+            // Code for moving the circle along with the marker during editing
+            mark.on('mousedown', function () {
+             if (editing) {
+               map.on('mousemove', function (e) {
+                 circle.setLatLng(e.latlng);
+               });
+             }
+            });
+            map.on('mouseup',function(e){
+              map.removeEventListener('mousemove');
+            });
+
+            // Add everything to the map
             drawnItems.addLayer(mark);
             map.addLayer(circle);
             map.addLayer(mark);

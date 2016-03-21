@@ -63,8 +63,10 @@
      * @returns {object} Ther user name of the currently logged in user.
      */
     function getUserName() {
-      var email = service.firebase.getAuth().password.email;
-      return email;
+      if (service.firebase) {
+        var email = service.firebase.getAuth().password.email;
+        return email;
+      }
     }
 
 
