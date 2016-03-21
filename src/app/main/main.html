@@ -1,13 +1,21 @@
-<div ng-controller="IndexController as vmIndex" layout-fill layout="column">
+<div ng-controller="IndexController as vm" layout-fill layout="column">
 
-  <md-toolbar class="navigation-bar" flex="none" style="background-color:  #272727;">
-    <div class="md-toolbar-tools" style="width: 100%">
-      <h1 layout-align="start center">Insight Imaging</h1>
+  <md-toolbar layout-sm="column" layout="row" class="navigation-bar" flex="none" style="background-color:  #272727;">
+    <!-- <div  style="width: 100%" > -->
+      <div layout-padding layout-align="center center" layout="column">
+        <h4   class="ii-title">Insight Imaging</h4>
+      </div>
+      <span flex="5"></span>
+      <div layout-padding layout-align="center center" layout="column">
+        <input placeholder="Search for surveys..." class="ii-search" flex ng-model="vm.droneTitle" ng-change="vm.getDroneTitles()">
+      </div>
       <span flex></span>
-      <md-button layout-align="end center" class="md-primary" ng-if="vmIndex.userAuth" ng-click="vmIndex.deauthenticate()">
-        Log out ({{vmIndex.userAuth.password.email}})
-      </md-button>
-    </div>
+      <div layout-padding layout-align="center center" layout="column">
+        <md-button layout-align="end center" class="md-primary" ng-if="vm.userAuth" ng-click="vm.deauthenticate()">
+          Log out ({{vm.userAuth.password.email}})
+        </md-button>
+        </div>
+    <!-- </div> -->
   </md-toolbar>
 
   <main id="map" flex="auto"></main>

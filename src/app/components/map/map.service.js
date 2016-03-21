@@ -3,15 +3,17 @@
 
   angular
     .module('insight-imaging-webapp')
-    .service('mapService', mapService);
+    .factory('mapService', mapService);
 
   /** @ngInject */
-  function mapService(L, baseLayersService, firebaseService, $mdDialog) {
+  function mapService(L,  baseLayersService, firebaseService, $mdDialog ) {
       var map;
       var drawnItems;
+      var drones = [];
 
       var service = {
-          returnMap  : returnMap
+          returnMap  : returnMap,
+          droneTitles : droneTitles
       };
 
       return service;
@@ -31,6 +33,10 @@
           return map;
       }
 
+      function droneTitles() {
+        return drones;
+      }
+
 
       /**
        * _init - initialise the map and all listners
@@ -41,6 +47,7 @@
           var baseLayers = baseLayersService.baseLayers;
           var deleting;
           var editing;
+          var titles;
 
           map = L.map('map', {
             center: [51.5252, -0.0902],
@@ -53,6 +60,17 @@
               map.invalidateSize();
             });
 
+
+          L.control.locate({
+            icon: 'material-icons',  // class for icon, fa-location-arrow or fa-map-marker
+            iconLoading: 'material-icons' // class for loading icon}).addTo(map);
+          }).addTo(map);
+
+          var sign = document.querySelector(".leaflet-control-locate .material-icons");
+          sign.innerHTML = "location_searching";
+          console.log(sign);
+
+          angular.element(document).find(".material-icons").text("location_searching");
           L.control.layers(baseLayers).addTo(map);
 
           drawnItems = new L.FeatureGroup();
@@ -116,6 +134,7 @@
 
             showDialog().then(function(markerDetails){
               marker.properties = markerDetails;
+              //console.log(marker);
               firebaseService.saveMarker(marker)
                 .then(function (result) {
                   addMarker(result.key(), marker);
@@ -126,11 +145,25 @@
 
           map.on('draw:deleted', function (event) {
             event.layers.eachLayer(function (layer) {
+              //console.log(drones, layer.options.key)
+              if (drones.length) {
+                for (var i=0; i< drones.length; i++) {
+                  if (drones[i].options === layer.options.key) {
+                    drones.splice(i, 1);
+                  }
+                }
+              }
+
               firebaseService.deleteMarker(layer.options.key);
             });
           });
 
-
+          /**
+           * showDialog - Shows a dialog upon clicking on a marker
+           *
+           * @param   {string} properties - The properties to show in the dialog
+           * @return  {Object} - The dialog object
+           */
           function showDialog(properties) {
             return $mdDialog.show({
               templateUrl: "app/components/dialog/dialog.html",
@@ -146,14 +179,15 @@
           /**
            * addMarker - Adds a marker to the map representing a drone
            *
-           * @param  {string} key    the Firebase unique indentifying key
-           * @param  {Object} marker an object containing coords and a progress status
+           * @param  {string} key - The Firebase unique indentifying key
+           * @param  {Object} marker - An object containing coords and a progress status
            */
           function addMarker(key, marker) {
 
             var icon = droneMarker.extend({ options: { className: 'marker-' + marker.progress } });
             var mark = L.marker(marker.coords, { key: key, icon: new icon() });
             var circle = new L.circle(marker.coords, 50, { color: '#FF6060', fillColor: '#FF6060', fillOpacity: 0.5 });
+
 
             // Change style to see through when we delete and then visible when we add
             mark.on('remove', function () {
@@ -167,6 +201,7 @@
             mark.on('click', function(){
               if (!deleting) {
                 showDialog(marker.properties).then(function(updatedProperties){
+                  mark.droneTitle = updatedProperties.surveyIdentifier;
                   marker.properties = updatedProperties; // Update clientside marker properties
                   firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
                 });
@@ -189,6 +224,10 @@
             drawnItems.addLayer(mark);
             map.addLayer(circle);
             map.addLayer(mark);
+
+            mark.droneTitle = marker.properties.surveyIdentifier;
+            drones.push(mark);
+
           }
 
 
@@ -203,7 +242,7 @@
               if (properties) { // Properties already exists
                 vm.surveyRequester = properties.surveyRequester;
                 vm.dateRequested = properties.dateRequested;
-                vm.surveyIdentifier = properties.surveyIdentifier ;
+                vm.surveyIdentifier = properties.surveyIdentifier;
                 vm.surveyDescription = properties.surveyDescription;
                 vm.surveyImageryUrl = "https://upload.wikimedia.org/wikipedia/commons/3/35/Gujarat_Satellite_Imagery_2012.jpg"; //properties.surveyImageryUrl;
               }

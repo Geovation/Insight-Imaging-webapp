@@ -3,7 +3,7 @@
 
   angular
     .module('insight-imaging-webapp')
-    .service('baseLayersService', baseLayersService);
+    .factory('baseLayersService', baseLayersService);
 
   /** @ngInject */
   function baseLayersService(L, osKey, baseLayerUrl, baseLayerAttr) {

@@ -3,7 +3,7 @@
 
   angular
     .module('insight-imaging-webapp')
-    .service('firebaseService', firebaseService);
+    .factory('firebaseService', firebaseService);
 
   /** @ngInject */
   function firebaseService(Firebase, messageService, $firebaseAuth) {
