@@ -70,7 +70,6 @@
             .querySelector(".leaflet-control-locate .material-icons")
             .innerHTML = "location_searching";
 
-          angular.element(document).find(".material-icons").text("location_searching");
           L.control.layers(baseLayers).addTo(map);
 
           drawnItems = new L.FeatureGroup();
