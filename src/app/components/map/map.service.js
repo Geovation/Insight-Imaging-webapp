@@ -13,7 +13,7 @@
 
       var service = {
           returnMap  : returnMap,
-          getDroneIdentifiers : getDroneIdentifiers
+          getDrones: getDrones
       };
 
       return service;
@@ -33,7 +33,7 @@
           return map;
       }
 
-      function getDroneIdentifiers() {
+      function getDrones() {
         return drones;
       }
 
