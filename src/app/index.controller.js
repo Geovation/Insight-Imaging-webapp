@@ -6,7 +6,7 @@
     .controller('IndexController', IndexController);
 
   /** @ngInject */
-  function IndexController($log, $window, firebaseService) {
+  function IndexController($log, $window, firebaseService, mapService, droneSearch) {
 
     var vm = this;
 
@@ -14,6 +14,8 @@
     vm.register = register;
     vm.deauthenticate = deauthenticate;
     vm.userAuth = firebaseService.auth.$getAuth();
+    vm.droneIdentifier = "";
+    vm.getDroneIdentifiers = droneSearch.getDroneIdentifiers;
 
     /**
      * Authenticate a user.
