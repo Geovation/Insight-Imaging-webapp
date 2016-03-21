@@ -107,12 +107,17 @@
             });
           });
 
+          var search = document.getElementsByClassName("ii-search")[0]
           map.on('draw:deletestart', function (event) {
             deleting = true;
+            search.disabled = true;
+            search.style.opacity = 0.15;
           });
 
           map.on('draw:deletestop', function(event) {
             deleting = false;
+            search.disabled = false;
+            search.style.opacity = 1;
           });
 
           map.on('draw:editstart', function (event) {
@@ -146,7 +151,8 @@
               //console.log(drones, layer.options.key)
               if (drones.length) {
                 for (var i=0; i< drones.length; i++) {
-                  if (drones[i].options === layer.options.key) {
+                  if (drones[i].options.key === layer.options.key) {
+                    console.log("Delete", drones[i]);
                     drones.splice(i, 1);
                   }
                 }
