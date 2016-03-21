@@ -14,28 +14,28 @@
     vm.register = register;
     vm.deauthenticate = deauthenticate;
     vm.userAuth = firebaseService.auth.$getAuth();
-    vm.droneTitle = "";
-    vm.getDroneTitles = getDroneTitles;
+    vm.droneIdentifier = "";
+    vm.getDroneIdentifiers = getDroneIdentifiers;
 
-    function getDroneTitles(){
-      console.log("change", mapService.droneTitles(), vm.droneTitle);
-      var drones = mapService.droneTitles();
+    function getDroneIdentifiers(){
+
+      var drones = mapService.getDroneIdentifiers();
       var map = mapService.returnMap();
       for (var i=0; i < drones.length; i++){
-        var droneTitle = drones[i].droneTitle.toLowerCase();
-        var vmDroneTitle = vm.droneTitle.toLowerCase();
-        console.log(droneTitle.indexOf(vmDroneTitle));
 
-        if (vmDroneTitle && droneTitle.indexOf(vmDroneTitle) === -1 ) { // If the input doest match any part of the title
+        var droneIdentifier = drones[i].droneIdentifier.toLowerCase();
+        var vmDroneIdentifier = vm.droneIdentifier.toLowerCase();
+
+        if (vmDroneIdentifier && droneIdentifier.indexOf(vmDroneIdentifier) === -1 ) { // If the input doest match any part of the Identifier
           if (map.hasLayer(drones[i])) {
             map.removeLayer(drones[i]);
           }
         }
-        else if (droneTitle.indexOf(vmDroneTitle) != -1) {
+        else if (droneIdentifier.indexOf(vmDroneIdentifier) != -1) {
 
-          map.addLayer(drones[i]); // If the input matches a part of the title
+          map.addLayer(drones[i]); // If the input matches a part of the Identifier
         }
-        else if (!vmDroneTitle) {
+        else if (!vmDroneIdentifier) {
           map.addLayer(drones[i]);
         }
       }

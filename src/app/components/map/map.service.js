@@ -6,14 +6,14 @@
     .factory('mapService', mapService);
 
   /** @ngInject */
-  function mapService(L,  baseLayersService, firebaseService, $mdDialog ) {
+  function mapService(L, baseLayersService, firebaseService, $mdDialog) {
       var map;
       var drawnItems;
       var drones = [];
 
       var service = {
           returnMap  : returnMap,
-          droneTitles : droneTitles
+          getDroneIdentifiers : getDroneIdentifiers
       };
 
       return service;
@@ -33,7 +33,7 @@
           return map;
       }
 
-      function droneTitles() {
+      function getDroneIdentifiers() {
         return drones;
       }
 
@@ -47,7 +47,6 @@
           var baseLayers = baseLayersService.baseLayers;
           var deleting;
           var editing;
-          var titles;
 
           map = L.map('map', {
             center: [51.5252, -0.0902],
@@ -200,7 +199,7 @@
             mark.on('click', function(){
               if (!deleting) {
                 showDialog(marker.properties).then(function(updatedProperties){
-                  mark.droneTitle = updatedProperties.surveyIdentifier;
+                  mark.droneIdentifier = updatedProperties.surveyIdentifier;
                   marker.properties = updatedProperties; // Update clientside marker properties
                   firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
                 });
@@ -224,7 +223,7 @@
             map.addLayer(circle);
             map.addLayer(mark);
 
-            mark.droneTitle = marker.properties.surveyIdentifier;
+            mark.droneIdentifier = marker.properties.surveyIdentifier;
             drones.push(mark);
 
           }
