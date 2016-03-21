@@ -137,7 +137,7 @@
 
             showDialog().then(function(markerDetails){
               marker.properties = markerDetails;
-              //console.log(marker);
+
               firebaseService.saveMarker(marker)
                 .then(function (result) {
                   addMarker(result.key(), marker);
@@ -148,11 +148,10 @@
 
           map.on('draw:deleted', function (event) {
             event.layers.eachLayer(function (layer) {
-              //console.log(drones, layer.options.key)
+
               if (drones.length) {
                 for (var i=0; i< drones.length; i++) {
                   if (drones[i].options.key === layer.options.key) {
-                    console.log("Delete", drones[i]);
                     drones.splice(i, 1);
                   }
                 }
@@ -263,7 +262,7 @@
 
 
               function onChange() {
-                //console.log(vm.name);
+                //$log.debug(vm.name);
               }
 
               function closeDialog() {
