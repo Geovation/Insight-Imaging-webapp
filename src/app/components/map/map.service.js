@@ -56,18 +56,34 @@
 
           // Fix for map resize
           angular.element(document).ready(function() {
-              map.invalidateSize();
-            });
+            map.invalidateSize();
+          });
 
 
-          L.control.locate({
-            icon: 'material-icons',  // class for icon, fa-location-arrow or fa-map-marker
-            iconLoading: 'material-icons' // class for loading icon}).addTo(map);
+          var locateControl = L.control.locate({
+            icon: 'material-icons locate-button',  // class for icon, fa-location-arrow or fa-map-marker
+            iconLoading: 'material-icons locate-button-spinning' // class for loading icon}).addTo(map);
           }).addTo(map);
+          //map.on('dragstart', locateControl._stopFollowing, locateControl);
 
-          document
-            .querySelector(".leaflet-control-locate .material-icons")
-            .innerHTML = "location_searching";
+          var geolocate = document.querySelector(".leaflet-control-locate .material-icons");
+          geolocate.innerHTML = "location_searching";
+          var following = false;
+
+          map.on('locationfound', function(){
+            geolocate.innerHTML = "my_location";
+          })
+
+          // map.on('startfollowing', function() {
+          //   following = true;
+          //   console.log("following");
+          //   while (following) {
+          //     deg += 0.5;
+          //     geolocate.style.transform = "rotate("+deg+"deg)";
+          //   }
+          //   //map.on('dragstart', lc._stopFollowing, lc);
+          // });
+
 
           L.control.layers(baseLayers).addTo(map);
 
@@ -107,7 +123,7 @@
             });
           });
 
-          var search = document.getElementsByClassName("ii-search")[0]
+          var search = document.getElementsByClassName("ii-search")[0];
           map.on('draw:deletestart', function (event) {
             deleting = true;
             search.disabled = true;
@@ -202,7 +218,7 @@
 
             // If we click on a marker and not deleting show the dialog box with the marker info
             mark.on('click', function(){
-              if (!deleting) {
+              if (!deleting && !editing) {
                 showDialog(marker.properties).then(function(updatedProperties){
                   mark.droneIdentifier = updatedProperties.surveyIdentifier;
                   marker.properties = updatedProperties; // Update clientside marker properties

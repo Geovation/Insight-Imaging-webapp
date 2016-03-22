@@ -64,8 +64,13 @@
      */
     function getUserName() {
       if (service.firebase) {
-        var email = service.firebase.getAuth().password.email;
-        return email;
+        var user = service.firebase.getAuth();
+        if (user) {
+          return user.password.email;
+        }
+        else {
+          deauthenticate();
+        }
       }
     }
 
