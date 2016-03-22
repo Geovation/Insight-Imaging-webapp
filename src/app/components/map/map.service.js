@@ -59,34 +59,21 @@
             map.invalidateSize();
           });
 
-
-          var locateControl = L.control.locate({
-            icon: 'material-icons locate-button',  // class for icon, fa-location-arrow or fa-map-marker
-            iconLoading: 'material-icons locate-button-spinning' // class for loading icon}).addTo(map);
+          // Geolocation
+          L.control.locate({
+            icon: 'material-icons locate-button',
+            iconLoading: 'material-icons locate-button-spinning'
           }).addTo(map);
-          //map.on('dragstart', locateControl._stopFollowing, locateControl);
-
           var geolocate = document.querySelector(".leaflet-control-locate .material-icons");
-          geolocate.innerHTML = "location_searching";
-          var following = false;
-
+          geolocate.innerHTML = "location_searching"; // Change to the Material Design search icon
           map.on('locationfound', function(){
-            geolocate.innerHTML = "my_location";
-          })
+            geolocate.innerHTML = "my_location"; // Change icon to a Material Design located icon
+          });
 
-          // map.on('startfollowing', function() {
-          //   following = true;
-          //   console.log("following");
-          //   while (following) {
-          //     deg += 0.5;
-          //     geolocate.style.transform = "rotate("+deg+"deg)";
-          //   }
-          //   //map.on('dragstart', lc._stopFollowing, lc);
-          // });
-
-
+          // Basemaps
           L.control.layers(baseLayers).addTo(map);
 
+          // Drawn Items
           drawnItems = new L.FeatureGroup();
           map.addLayer(drawnItems);
 
