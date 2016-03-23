@@ -14,8 +14,9 @@
     vm.register = register;
     vm.deauthenticate = deauthenticate;
     vm.userAuth = firebaseService.auth.$getAuth();
-    vm.droneIdentifier = "";
-    vm.getDroneIdentifiers = droneSearch.getDroneIdentifiers;
+    vm.searchCriteria = "";
+    vm.searchMode = "surveyRequester";
+    vm.searchDrones = droneSearch.searchDrones;
 
     /**
      * Authenticate a user.

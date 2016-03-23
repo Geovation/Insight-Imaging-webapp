@@ -231,7 +231,8 @@
             map.addLayer(circle);
             map.addLayer(mark);
 
-            mark.droneIdentifier = marker.properties.surveyIdentifier;
+            mark.surveyIdentifier = marker.properties.surveyIdentifier;
+            mark.surveyRequester  = marker.properties.surveyRequester;
             drones.push(mark);
 
           }
@@ -250,7 +251,7 @@
                 vm.dateRequested = properties.dateRequested;
                 vm.surveyIdentifier = properties.surveyIdentifier;
                 vm.surveyDescription = properties.surveyDescription;
-                vm.surveyImageryUrl = "https://upload.wikimedia.org/wikipedia/commons/3/35/Gujarat_Satellite_Imagery_2012.jpg"; //properties.surveyImageryUrl;
+                vm.surveyImageryUrl = properties.surveyImageryUrl || "https://upload.wikimedia.org/wikipedia/commons/3/35/Gujarat_Satellite_Imagery_2012.jpg"; //properties.surveyImageryUrl;
               }
               else { // Creating dialog for the first time
                 vm.surveyRequester = firebaseService.getUserName(); // Perhaps  try to auto complete?
@@ -273,7 +274,8 @@
                   "surveyRequester"   : vm.surveyRequester,
                   "dateRequested"     : vm.dateRequested,
                   "surveyIdentifier"  : vm.surveyIdentifier,
-                  "surveyDescription" : vm.surveyDescription
+                  "surveyDescription" : vm.surveyDescription,
+                  "surveyImageryUrl"  : vm.surveyImageryUrl
                 });
               }
 

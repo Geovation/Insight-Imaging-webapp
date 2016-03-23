@@ -9,8 +9,33 @@
       <span flex="5"></span>
 
       <div layout-padding layout-align="center center" layout="column">
-        <input placeholder="Search for surveys..." class="ii-search" flex ng-model="vm.droneIdentifier" ng-change="vm.getDroneIdentifiers(vm.droneIdentifier)">
-      </div>
+       <!-- <select flex ng-model="vm.searchMode">
+         <optgroup>
+           <option selected="selected" value="surveyRequester">
+             User
+           </option>
+           <option value="surveyIdentifier">
+             Survey Identifier
+           </option>
+         </optgroup>
+
+       </select> -->
+       <md-input-container layout-align="center center" layout="column" class="search-mode">
+        <label>Search Mode</label>
+        <md-select ng-model="vm.searchMode">
+          <md-option selected="selected" value="surveyRequester">
+            Survey Requester
+          </md-option>
+          <md-option value="surveyIdentifier">
+            Survey Identifier
+          </md-option>
+        </md-select>
+      </md-input-container>
+     </div >
+
+     <div layout-padding layout-align="center center" layout="column">
+       <input placeholder="Search for surveys..." class="ii-search" flex ng-model="vm.searchCriteria" ng-change="vm.searchDrones(vm.searchMode, vm.searchCriteria)">
+     </div>
 
       <span flex></span>
 
