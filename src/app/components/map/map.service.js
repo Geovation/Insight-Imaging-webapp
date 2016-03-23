@@ -56,21 +56,24 @@
 
           // Fix for map resize
           angular.element(document).ready(function() {
-              map.invalidateSize();
-            });
+            map.invalidateSize();
+          });
 
-
+          // Geolocation
           L.control.locate({
-            icon: 'material-icons',  // class for icon, fa-location-arrow or fa-map-marker
-            iconLoading: 'material-icons' // class for loading icon}).addTo(map);
+            icon: 'material-icons locate-button',
+            iconLoading: 'material-icons locate-button-spinning'
           }).addTo(map);
+          var geolocate = document.querySelector(".leaflet-control-locate .material-icons");
+          geolocate.innerHTML = "location_searching"; // Change to the Material Design search icon
+          map.on('locationfound', function(){
+            geolocate.innerHTML = "my_location"; // Change icon to a Material Design located icon
+          });
 
-          document
-            .querySelector(".leaflet-control-locate .material-icons")
-            .innerHTML = "location_searching";
-
+          // Basemaps
           L.control.layers(baseLayers).addTo(map);
 
+          // Drawn Items
           drawnItems = new L.FeatureGroup();
           map.addLayer(drawnItems);
 
@@ -107,7 +110,7 @@
             });
           });
 
-          var search = document.getElementsByClassName("ii-search")[0]
+          var search = document.getElementsByClassName("ii-search")[0];
           map.on('draw:deletestart', function (event) {
             deleting = true;
             search.disabled = true;
@@ -202,7 +205,7 @@
 
             // If we click on a marker and not deleting show the dialog box with the marker info
             mark.on('click', function(){
-              if (!deleting) {
+              if (!deleting && !editing) {
                 showDialog(marker.properties).then(function(updatedProperties){
                   mark.droneIdentifier = updatedProperties.surveyIdentifier;
                   marker.properties = updatedProperties; // Update clientside marker properties
