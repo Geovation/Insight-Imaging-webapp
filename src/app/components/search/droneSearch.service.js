@@ -9,7 +9,7 @@
   function droneSearch(mapService) {
 
       var service = {
-          getDroneIdentifiers : getDroneIdentifiers
+          searchDrones : searchDrones
       };
 
       return service;
@@ -23,26 +23,31 @@
        *
        * @param  {type} vmDroneIdentifier - a list of all the markers for drones
        */
-      function getDroneIdentifiers(vmDroneIdentifier){
+      function searchDrones(searchMode, searchCriteria){
 
         var drones = mapService.getDrones();
         var map = mapService.returnMap();
+
         for (var i=0; i < drones.length; i++){
 
-          var droneIdentifier = drones[i].droneIdentifier.toLowerCase();
-          vmDroneIdentifier = vmDroneIdentifier.toLowerCase();
+          //console.log(searchMode, drones[i], drones[i][searchMode]);
+          //console.log(searchCriteria);
+          var drone = drones[i];
+          var droneIdentifier = drone[searchMode].toLowerCase();
+          searchCriteria = searchCriteria.toLowerCase();
 
-          if (vmDroneIdentifier && droneIdentifier.indexOf(vmDroneIdentifier) === -1 ) { // If the input doest match any part of the Identifier
-            if (map.hasLayer(drones[i])) {
-              map.removeLayer(drones[i]);
+
+          if (searchCriteria && droneIdentifier.indexOf(searchCriteria) === -1 ) { // If the input doest match any part of the Identifier
+            if (map.hasLayer(drone)) {
+              map.removeLayer(drone);
             }
           }
-          else if (droneIdentifier.indexOf(vmDroneIdentifier) != -1) {
+          else if (droneIdentifier.indexOf(searchCriteria) != -1) {
 
-            map.addLayer(drones[i]); // If the input matches a part of the Identifier
+            map.addLayer(drone); // If the input matches a part of the Identifier
           }
-          else if (!vmDroneIdentifier) {
-            map.addLayer(drones[i]);
+          else if (!searchCriteria) {
+            map.addLayer(drone);
           }
         }
 

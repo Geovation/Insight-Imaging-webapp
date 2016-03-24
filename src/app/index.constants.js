@@ -21,6 +21,11 @@
       'Google': '&copy; <a href="http://maps.google.com">Google</a>',
       'OS': '&copy; <a href="https://www.os.uk/copyright">Ordnance Survey</a>',
       'OSM': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    })
+    .constant('progressColors', {
+      'backlog'   : '#FF6060',
+      'ordered'   : '#FBFD8F',
+      'completed' : '#9CFD8F'
     });
 
 

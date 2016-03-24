@@ -1,35 +1,50 @@
 <div class="ii-survey-dialog" layout-padding flex="100">
     <h1> Survey Details </h1>
     <md-input-container class="md-block" flex-gt-xs >
-        <label>Survey Requester</label>
-        <input  disabled type="text" name="survey-date" value="{{vm.surveyRequester}}">
+        <label>Survey Requester (Required)</label>
+        <input type="text" ng-model="vm.surveyRequester" value="{{vm.surveyRequester}}" required="true">
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
         <label> Survey Request Date </label>
-        <input disabled type="text" name="survey-date" value="{{ vm.dateRequested | date : 'dd/MM/yy - hh:mm:ss' }}">
+        <input disabled type="text" value="{{ vm.dateRequested | date : 'dd/MM/yy - hh:mm:ss' }}">
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
-        <label> Survey Identifier</label>
-        <input ng-model="vm.surveyIdentifier" ng-change="vm.onChange()" flex="100" type="text" name="survey-name">
+        <label> Survey Identifier (Required)</label>
+        <input ng-model="vm.surveyIdentifier" flex="100" type="text" required="true">
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
         <label> Survey Description </label>
-        <textarea class="description" ng-model="vm.surveyDescription" ng-change="vm.onChange()" class="description" ng-model="vm.surveyDescription" ng-change="vm.onChange()" type="text" ></textarea>
+        <textarea class="description" ng-model="vm.surveyDescription" type="text" ></textarea>
     </md-input-container>
 
-    <md-input-container class="md-block" flex-gt-xs ng-if="vm.surveyImageryUrl">
+    <md-input-container class="md-block" flex-gt-xs>
+     <label>Status</label>
+     <md-select ng-model="vm.surveyProgress" ng-change="vm.surveyProgressChange()">
+       <md-option value="backlog">
+         Setting Up - Not Ordered
+       </md-option>
+       <md-option value="ordered">
+         Ordered
+       </md-option>
+       <md-option value="completed">
+         Data Received
+       </md-option>
+     </md-select>
+   </md-input-container>
+
+    <md-input-container class="md-block" flex-gt-xs ng-if="vm.surveyImageryUrl && vm.surveyProgress == 'completed'">
         <h4> Survey Image </h4>
         <a ng-href="{{vm.surveyImageryUrl}}">
-          <img ng-src="{{vm.surveyImageryUrl}}" style="height: 380px; ">
+          <img ng-src="{{vm.surveyImageryUrl}}" class="survey-img">
         </a>
     </md-input-container>
 
     <div layout-padding >
       <md-divider></md-divider>
-      <md-button ng-click="vm.closeDialog()" layout-padding  layout-align="center center">
+      <md-button ng-click="vm.closeDialog()" layout-padding  layout-align="center center" ng-disabled="!vm.surveyRequester && !vm.surveyIdentifier">
         Save Survey
       </md-button>
     </div>
