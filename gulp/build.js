@@ -3,6 +3,9 @@
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
+var del = require('del');
+var rename = require('gulp-rename');
+
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
@@ -91,8 +94,14 @@ gulp.task('leaflet', function () {
     .pipe(gulp.dest(path.join(conf.paths.dist, '/styles/images/')));
 });
 
+// Fix for Leaflet Label not getting injected
+gulp.task('leaflet-label', function() {
+  var inJson = "gulp/fixes/leaflet-label-bower.json";
+  var outJson = "bower_components/Leaflet.label/";
+  return gulp.src(inJson).pipe(rename(".bower.json")).pipe(gulp.dest(outJson));
+});
 
-gulp.task('other',['leaflet'], function () {
+gulp.task('other',['leaflet','leaflet-label'], function () {
   var fileFilter = $.filter(function (file) {
     return file.stat.isFile();
   });
@@ -109,4 +118,4 @@ gulp.task('clean', function () {
   return $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')]);
 });
 
-gulp.task('build', ['html', 'fonts', 'other']);
+gulp.task('build', ['other', 'html', 'fonts']);

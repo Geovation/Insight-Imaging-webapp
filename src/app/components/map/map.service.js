@@ -6,7 +6,7 @@
     .factory('mapService', mapService);
 
   /** @ngInject */
-  function mapService(L, baseLayersService, firebaseService, $mdDialog) {
+  function mapService(L, baseLayersService, firebaseService, $mdDialog, progressColors) {
       var map;
       var drawnItems;
       var drones = [];
@@ -69,7 +69,7 @@
           map.on('locationfound', function(){
             geolocate.innerHTML = "my_location"; // Change icon to a Material Design located icon
           });
-
+          
           // Basemaps
           L.control.layers(baseLayers).addTo(map);
 
@@ -77,7 +77,7 @@
           drawnItems = new L.FeatureGroup();
           map.addLayer(drawnItems);
 
-          var droneMarker = L.Icon.extend({
+          var droneIcon = L.Icon.extend({
             options: {
               iconAnchor: new L.Point(17, 15),
               iconSize: new L.Point(35, 30),
@@ -92,7 +92,7 @@
               circle: false,
               rectangle: false,
               polygon: false,
-              marker: { icon: new droneMarker() }
+              marker: { icon: new droneIcon() }
             },
             edit: {
               featureGroup: drawnItems,
@@ -103,9 +103,9 @@
           map.addControl(drawControl);
 
           map.whenReady(function () {
-            firebaseService.loadUserMarkers().then(function (markers) {
-              if (markers) Object.keys(markers).forEach(function (key) {
-                addMarker(key, markers[key]);
+            firebaseService.loadUserMarkers().then(function (surveys) {
+              if (surveys) Object.keys(surveys).forEach(function (key) {
+                addMarker(key, surveys[key]);
               });
             });
           });
@@ -132,18 +132,18 @@
           });
 
           map.on('draw:created', function (event) {
-            var marker = {
+            var surveyDetails = {
               coords: event.layer._latlng,
               progress: 'backlog',
               properties: undefined
             };
 
-            showDialog().then(function(markerDetails){
-              marker.properties = markerDetails;
+            showDialog().then(function(vmSurveyDetails){
+              surveyDetails.properties = vmSurveyDetails;
 
-              firebaseService.saveMarker(marker)
+              firebaseService.saveMarker(surveyDetails)
                 .then(function (result) {
-                  addMarker(result.key(), marker);
+                  addMarker(result.key(), surveyDetails);
                 });
             });
 
@@ -164,58 +164,90 @@
             });
           });
 
+
           /**
            * showDialog - Shows a dialog upon clicking on a marker
            *
            * @param   {string} properties - The properties to show in the dialog
            * @return  {Object} - The dialog object
            */
-          function showDialog(properties) {
+          function showDialog(properties, marker) {
             return $mdDialog.show({
               templateUrl: "app/components/dialog/dialog.html",
               controller : DialogController,
               controllerAs : "vm",
               bindToController : true,
               locals: {
-                 properties : properties
+                 properties : properties,
+                 marker : marker
                }
             });
           }
 
+
           /**
-           * addMarker - Adds a marker to the map representing a drone
+           * createMarker - Returns the Leaflet marker and associated radius
            *
-           * @param  {string} key - The Firebase unique indentifying key
+           * @param  {Object} surveyDetails - An object with the necessary properties
+           * @param  {string} key           - The firebase key for the survey
+           * @param  {string} progress      - The progress of the survey
+           * @return {Object}               - The marker and the circle
+           */
+          function createMarker(surveyDetails, key, progress) {
+
+            var icon = droneIcon.extend({ options: {  } });
+            var marker = L.marker(surveyDetails.coords, { key: key, icon: new icon() });
+
+            var circleColor = progressColors[progress];
+
+            var circleOptions = { color: circleColor, fillColor: circleColor, fillOpacity: 0.5 };
+            var circle = new L.circle(surveyDetails.coords, 50, circleOptions);
+
+            return { marker : marker, circle : circle };
+
+          }
+
+          /**
+           * addMarker - Adds a marker to the map representing a  drone
+           *
+           * @param  {string} key    - The Firebase unique indentifying key
            * @param  {Object} marker - An object containing coords and a progress status
            */
-          function addMarker(key, marker) {
+          function addMarker(key, surveyDetails) {
 
-            var icon = droneMarker.extend({ options: { className: 'marker-' + marker.progress } });
-            var mark = L.marker(marker.coords, { key: key, icon: new icon() });
-            var circle = new L.circle(marker.coords, 50, { color: '#FF6060', fillColor: '#FF6060', fillOpacity: 0.5 });
-
+            var progress = surveyDetails.properties.surveyProgress || "backlog";
+            var droneMarkers = createMarker(surveyDetails, key, progress);
+            var marker = droneMarkers.marker;
+            var circle = droneMarkers.circle;
 
             // Change style to see through when we delete and then visible when we add
-            mark.on('remove', function () {
+            marker.on('remove', function () {
               circle.setStyle({ opacity: 0, fillOpacity: 0 });
             });
-            mark.on('add', function () {
+            marker.on('add', function () {
               circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
             });
 
             // If we click on a marker and not deleting show the dialog box with the marker info
-            mark.on('click', function(){
+            marker.on('click', function(){
               if (!deleting && !editing) {
-                showDialog(marker.properties).then(function(updatedProperties){
-                  mark.droneIdentifier = updatedProperties.surveyIdentifier;
-                  marker.properties = updatedProperties; // Update clientside marker properties
+                showDialog(surveyDetails.properties, marker).then(function(updatedProperties){
+                  marker.droneIdentifier = updatedProperties.surveyIdentifier;
+                  surveyDetails.properties = updatedProperties; // Update clientside marker properties
                   firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
                 });
               }
             });
 
+            marker.changeMarkerProgress = function(progress) {
+              var circleColor = progressColors[progress];
+              var icon = droneIcon.extend({ options: { className: 'marker-' + progress } });
+              marker.setIcon( new icon() );
+              circle.setStyle({ color: circleColor, fillColor: circleColor });
+            };
+
             // Code for moving the circle along with the marker during editing
-            mark.on('mousedown', function () {
+            marker.on('mousedown', function () {
              if (editing) {
                map.on('mousemove', function (e) {
                  circle.setLatLng(e.latlng);
@@ -227,13 +259,14 @@
             });
 
             // Add everything to the map
-            drawnItems.addLayer(mark);
+            drawnItems.addLayer(marker);
             map.addLayer(circle);
-            map.addLayer(mark);
+            marker.bindLabel(surveyDetails.properties.surveyRequester || "A Drone Survey");
+            map.addLayer(marker);
 
-            mark.surveyIdentifier = marker.properties.surveyIdentifier;
-            mark.surveyRequester  = marker.properties.surveyRequester;
-            drones.push(mark);
+            marker.surveyIdentifier = surveyDetails.properties.surveyIdentifier;
+            marker.surveyRequester  = surveyDetails.properties.surveyRequester;
+            drones.push(marker);
 
           }
 
@@ -243,30 +276,31 @@
            *
            * @return {Object} - The survey data returned from the inputs
            */
-          function DialogController(properties) {
+          function DialogController(properties, marker) {
               var vm = this;
 
               if (properties) { // Properties already exists
                 vm.surveyRequester = properties.surveyRequester;
                 vm.dateRequested = properties.dateRequested;
                 vm.surveyIdentifier = properties.surveyIdentifier;
+                vm.surveyProgress   = properties.surveyProgress || "backlog";
                 vm.surveyDescription = properties.surveyDescription;
                 vm.surveyImageryUrl = properties.surveyImageryUrl || "https://upload.wikimedia.org/wikipedia/commons/3/35/Gujarat_Satellite_Imagery_2012.jpg"; //properties.surveyImageryUrl;
               }
               else { // Creating dialog for the first time
-                vm.surveyRequester = firebaseService.getUserName(); // Perhaps  try to auto complete?
+                vm.surveyRequester = ""; // Perhaps  try to auto complete?
                 vm.dateRequested = new Date().getTime();
                 vm.surveyIdentifier = "";
+                vm.surveyProgress   = "backlog";
                 vm.surveyDescription = "";
                 vm.surveyImageryUrl = "";
               }
 
-              vm.onChange = onChange;
+              vm.surveyProgressChange = surveyProgressChange;
               vm.closeDialog = closeDialog;
 
-
-              function onChange() {
-                //$log.debug(vm.name);
+              function surveyProgressChange() {
+                marker.changeMarkerProgress(vm.surveyProgress);
               }
 
               function closeDialog() {
@@ -274,6 +308,7 @@
                   "surveyRequester"   : vm.surveyRequester,
                   "dateRequested"     : vm.dateRequested,
                   "surveyIdentifier"  : vm.surveyIdentifier,
+                  "surveyProgress"    : vm.surveyProgress,
                   "surveyDescription" : vm.surveyDescription,
                   "surveyImageryUrl"  : vm.surveyImageryUrl
                 });

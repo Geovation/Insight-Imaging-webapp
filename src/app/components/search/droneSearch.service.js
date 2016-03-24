@@ -31,7 +31,7 @@
         for (var i=0; i < drones.length; i++){
 
           //console.log(searchMode, drones[i], drones[i][searchMode]);
-          console.log(searchCriteria);
+          //console.log(searchCriteria);
           var drone = drones[i];
           var droneIdentifier = drone[searchMode].toLowerCase();
           searchCriteria = searchCriteria.toLowerCase();
