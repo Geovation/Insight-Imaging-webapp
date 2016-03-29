@@ -102,12 +102,11 @@
           });
           map.addControl(drawControl);
 
-          //console.log(firebaseService.isAdmin());
+
           firebaseService.isAdmin().then(function(admin){
-            console.log(admin);
             if (admin) {
-              $log.log("Admin");
               // If the user is an administrator
+              $log.log("Admin");
               map.whenReady(function () {
                 firebaseService.loadAllUserMarkers().then(function (users) {
                   if (users) Object.keys(users).forEach(function (uid) {
@@ -122,8 +121,8 @@
               });
             }
             else {
-              $log.log("User");
               // If the user is just a normal user
+              $log.log("User");
               map.whenReady(function () {
                 firebaseService.loadUserMarkers().then(function (surveys) {
                   if (surveys) Object.keys(surveys).forEach(function (key) {
@@ -133,7 +132,6 @@
               });
             }
           });
-
 
           var search = document.getElementsByClassName("ii-search")[0];
           map.on('draw:deletestart', function (event) {
@@ -262,7 +260,6 @@
                     showDialog(props, marker).then(function(updatedProperties){
                       marker.droneIdentifier = updatedProperties.surveyIdentifier;
                       props = updatedProperties; // Update clientside marker properties
-                      console.log(updatedProperties);
                       firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
                     });
                   }
