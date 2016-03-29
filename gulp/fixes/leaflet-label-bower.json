@@ -1,7 +1,7 @@
 {
   "name": "Leaflet.label",
   "homepage": "https://github.com/Leaflet/Leaflet.label",
-  "main":["dist/leaflet.label.js","dist/leaflet.label.css"],
+  "main": ["dist/leaflet.label.js","dist/leaflet.label.css"],
   "version": "0.2.1",
   "_release": "0.2.1",
   "_resolution": {

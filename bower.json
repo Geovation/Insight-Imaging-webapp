@@ -20,12 +20,13 @@
     "leaflet.locatecontrol": "~0.49.0",
     "angularfire": "~1.1.3",
     "firebase": "~2.4.0",
-    "Leaflet.label": "~0.2.1" 
+    "Leaflet.label": "master"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.2"
   },
   "resolutions": {
-    "angular": "~1.4.2"
+    "angular": "~1.4.2",
+    "Leaflet.label": "master"
   }
 }
