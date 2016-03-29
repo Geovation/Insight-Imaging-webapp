@@ -21,6 +21,18 @@
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
+     <label>Survey Data Format</label>
+     <md-select ng-model="vm.surveyDataFormat" ng-disabled="vm.surveyProgress == 'completed' && vm.surveyDataFormat">
+       <md-option value="tif">
+         TIF
+       </md-option>
+       <md-option value="png">
+         PNG
+       </md-option>
+     </md-select>
+   </md-input-container>
+
+    <md-input-container class="md-block" flex-gt-xs>
      <label>Status</label>
      <md-select ng-model="vm.surveyProgress" ng-change="vm.surveyProgressChange()">
        <md-option value="backlog">
@@ -35,12 +47,18 @@
      </md-select>
    </md-input-container>
 
-    <md-input-container class="md-block" flex-gt-xs ng-if="vm.surveyImageryUrl && vm.surveyProgress == 'completed'">
-        <h4> Survey Image </h4>
-        <a ng-href="{{vm.surveyImageryUrl}}">
-          <img ng-src="{{vm.surveyImageryUrl}}" class="survey-img">
-        </a>
+   <md-input-container class="md-block" flex-gt-xs ng-if="vm.surveyImageryUrl && vm.surveyProgress == 'completed'">
+     <h4> Survey Image </h4>
+     <a ng-href="{{vm.surveyImageryUrl}}">
+       <img ng-src="{{vm.surveyImageryUrl}}" class="survey-img">
+     </a>
+   </md-input-container>
+
+    <md-input-container class="md-block" flex-gt-xs ng-if="vm.surveyProgress == 'completed'">
+      <label> Survey URL </label>
+      <input ng-model="vm.surveyImageryUrl" flex="100" type="text">
     </md-input-container>
+
 
     <div layout-padding >
       <md-divider></md-divider>

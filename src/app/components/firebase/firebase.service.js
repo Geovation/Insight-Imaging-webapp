@@ -21,7 +21,9 @@
       saveMarker: saveMarker,
       deleteMarker: deleteMarker,
       updateMarkerProperties : updateMarkerProperties,
-      loadUserMarkers: loadUserMarkers
+      loadUserMarkers: loadUserMarkers,
+      loadAllUserMarkers: loadAllUserMarkers,
+      isAdmin : isAdmin
   };
 
     /**
@@ -120,6 +122,37 @@
       var uid = service.firebase.getAuth().uid;
       return new Promise(function (resolve, reject) {
         service.firebase.child('users').child(uid).child('jobs')
+          .on('value', function (response) { resolve(response.val()); });
+      });
+    }
+
+    /**
+     * isAdmin - Determine if user is an administrator
+     *
+     * @return {boolean}  - True or false depending on if user is admin
+     */
+    function isAdmin(cb) {
+      var uid = service.firebase.getAuth().uid;
+      return new Promise(function (resolve, reject) {
+        console.log(uid);
+        service.firebase.child('admins').child(uid)
+          .once('value',
+            function(response){
+              resolve( true );
+            },
+            function(error){
+              resolve( false );
+            });
+        });
+    }
+
+    /**
+     * Load all the markers for the current user.
+     * @returns {Promise<array<object>>} A promised array of marker objects.
+     */
+    function loadAllUserMarkers(cb) {
+      return new Promise(function (resolve, reject) {
+        service.firebase.child('users')
           .on('value', function (response) { resolve(response.val()); });
       });
     }

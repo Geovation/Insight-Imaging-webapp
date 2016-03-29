@@ -95,13 +95,13 @@ gulp.task('leaflet', function () {
 });
 
 // Fix for Leaflet Label not getting injected
-gulp.task('leaflet-label', function() {
-  var inJson = "gulp/fixes/leaflet-label-bower.json";
-  var outJson = "bower_components/Leaflet.label/";
-  return gulp.src(inJson).pipe(rename(".bower.json")).pipe(gulp.dest(outJson));
-});
+// gulp.task('leaflet-label', function() {
+//   var inJson = "gulp/fixes/leaflet-label-bower.json";
+//   var outJson = "bower_components/Leaflet.label/";
+//   return gulp.src(inJson).pipe(rename(".bower.json")).pipe(gulp.dest(outJson));
+// });
 
-gulp.task('other',['leaflet','leaflet-label'], function () {
+gulp.task('other',['leaflet'], function () {
   var fileFilter = $.filter(function (file) {
     return file.stat.isFile();
   });

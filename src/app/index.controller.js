@@ -6,7 +6,7 @@
     .controller('IndexController', IndexController);
 
   /** @ngInject */
-  function IndexController($log, $window, firebaseService, mapService, droneSearch) {
+  function IndexController($log, $window, firebaseService, mapService, surveySearch) {
 
     var vm = this;
 
@@ -16,7 +16,7 @@
     vm.userAuth = firebaseService.auth.$getAuth();
     vm.searchCriteria = "";
     vm.searchMode = "surveyRequester";
-    vm.searchDrones = droneSearch.searchDrones;
+    vm.searchSurveys = surveySearch.searchSurveys;
 
     /**
      * Authenticate a user.

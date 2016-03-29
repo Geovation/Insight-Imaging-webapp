@@ -6,14 +6,14 @@
     .factory('mapService', mapService);
 
   /** @ngInject */
-  function mapService(L, baseLayersService, firebaseService, $mdDialog, progressColors) {
+  function mapService($log, L, baseLayersService, firebaseService, $mdDialog, progressColors) {
       var map;
       var drawnItems;
-      var drones = [];
+      var surveys = [];
 
       var service = {
           returnMap  : returnMap,
-          getDrones: getDrones
+          getSurveys : getSurveys
       };
 
       return service;
@@ -33,8 +33,8 @@
           return map;
       }
 
-      function getDrones() {
-        return drones;
+      function getSurveys() {
+        return surveys;
       }
 
 
@@ -69,7 +69,7 @@
           map.on('locationfound', function(){
             geolocate.innerHTML = "my_location"; // Change icon to a Material Design located icon
           });
-          
+
           // Basemaps
           L.control.layers(baseLayers).addTo(map);
 
@@ -102,13 +102,38 @@
           });
           map.addControl(drawControl);
 
-          map.whenReady(function () {
-            firebaseService.loadUserMarkers().then(function (surveys) {
-              if (surveys) Object.keys(surveys).forEach(function (key) {
-                addMarker(key, surveys[key]);
+          //console.log(firebaseService.isAdmin());
+          firebaseService.isAdmin().then(function(admin){
+            console.log(admin);
+            if (admin) {
+              $log.log("Admin");
+              // If the user is an administrator
+              map.whenReady(function () {
+                firebaseService.loadAllUserMarkers().then(function (users) {
+                  if (users) Object.keys(users).forEach(function (uid) {
+                    var surveys = users[uid].jobs;
+                    if (surveys) Object.keys(surveys).forEach(function (key) {
+                      addMarker(key, surveys[key]);
+                    });
+                  });
+                }).catch(function(error){
+                  $log.log("Error: ", error);
+                });
               });
-            });
+            }
+            else {
+              $log.log("User");
+              // If the user is just a normal user
+              map.whenReady(function () {
+                firebaseService.loadUserMarkers().then(function (surveys) {
+                  if (surveys) Object.keys(surveys).forEach(function (key) {
+                    addMarker(key, surveys[key]);
+                  });
+                });
+              });
+            }
           });
+
 
           var search = document.getElementsByClassName("ii-search")[0];
           map.on('draw:deletestart', function (event) {
@@ -134,7 +159,6 @@
           map.on('draw:created', function (event) {
             var surveyDetails = {
               coords: event.layer._latlng,
-              progress: 'backlog',
               properties: undefined
             };
 
@@ -152,10 +176,10 @@
           map.on('draw:deleted', function (event) {
             event.layers.eachLayer(function (layer) {
 
-              if (drones.length) {
-                for (var i=0; i< drones.length; i++) {
-                  if (drones[i].options.key === layer.options.key) {
-                    drones.splice(i, 1);
+              if (surveys.length) {
+                for (var i=0; i< surveys.length; i++) {
+                  if (surveys[i].options.key === layer.options.key) {
+                    surveys.splice(i, 1);
                   }
                 }
               }
@@ -215,58 +239,64 @@
            */
           function addMarker(key, surveyDetails) {
 
-            var progress = surveyDetails.properties.surveyProgress || "backlog";
-            var droneMarkers = createMarker(surveyDetails, key, progress);
-            var marker = droneMarkers.marker;
-            var circle = droneMarkers.circle;
+            var props = surveyDetails.properties;
+            if (props) {
+              var progress = props.surveyProgress;
 
-            // Change style to see through when we delete and then visible when we add
-            marker.on('remove', function () {
-              circle.setStyle({ opacity: 0, fillOpacity: 0 });
-            });
-            marker.on('add', function () {
-              circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
-            });
+              var droneMarkers = createMarker(surveyDetails, key, progress);
+              var marker = droneMarkers.marker;
+              var circle = droneMarkers.circle;
 
-            // If we click on a marker and not deleting show the dialog box with the marker info
-            marker.on('click', function(){
-              if (!deleting && !editing) {
-                showDialog(surveyDetails.properties, marker).then(function(updatedProperties){
-                  marker.droneIdentifier = updatedProperties.surveyIdentifier;
-                  surveyDetails.properties = updatedProperties; // Update clientside marker properties
-                  firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
-                });
-              }
-            });
+              // Change style to see through when we delete and then visible when we add
+              marker.on('remove', function () {
+                circle.setStyle({ opacity: 0, fillOpacity: 0 });
+              });
+              marker.on('add', function () {
+                circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
+              });
 
-            marker.changeMarkerProgress = function(progress) {
-              var circleColor = progressColors[progress];
-              var icon = droneIcon.extend({ options: { className: 'marker-' + progress } });
-              marker.setIcon( new icon() );
-              circle.setStyle({ color: circleColor, fillColor: circleColor });
-            };
+              // If we click on a marker and not deleting show the dialog box with the marker info
+              marker.on('click', function(){
+                if (!deleting && !editing) {
+                  showDialog(props, marker).then(function(updatedProperties){
+                    marker.droneIdentifier = updatedProperties.surveyIdentifier;
+                    props = updatedProperties; // Update clientside marker properties
+                    console.log(updatedProperties);
+                    firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
+                  });
+                }
+              });
 
-            // Code for moving the circle along with the marker during editing
-            marker.on('mousedown', function () {
-             if (editing) {
-               map.on('mousemove', function (e) {
-                 circle.setLatLng(e.latlng);
-               });
-             }
-            });
-            map.on('mouseup',function(e){
-              map.removeEventListener('mousemove');
-            });
+              marker.changeMarkerProgress = function(progress) {
+                var circleColor = progressColors[progress];
+                var icon = droneIcon.extend({ options: { className: 'marker-' + progress } });
+                marker.setIcon( new icon() );
+                circle.setStyle({ color: circleColor, fillColor: circleColor });
+              };
 
-            // Add everything to the map
-            drawnItems.addLayer(marker);
-            map.addLayer(circle);
-            marker.bindLabel(surveyDetails.properties.surveyRequester || "A Drone Survey");
-            map.addLayer(marker);
+              // Code for moving the circle along with the marker during editing
+              marker.on('mousedown', function () {
+               if (editing) {
+                 map.on('mousemove', function (e) {
+                   circle.setLatLng(e.latlng);
+                 });
+               }
+              });
+              map.on('mouseup',function(e){
+                map.removeEventListener('mousemove');
+              });
 
-            marker.surveyIdentifier = surveyDetails.properties.surveyIdentifier;
-            marker.surveyRequester  = surveyDetails.properties.surveyRequester;
-            drones.push(marker);
+              // Add everything to the map
+              drawnItems.addLayer(marker);
+              map.addLayer(circle);
+              marker.bindLabel(props.surveyRequester || "A Drone Survey");
+              map.addLayer(marker);
+
+              marker.surveyIdentifier = props.surveyIdentifier;
+              marker.surveyRequester  = props.surveyRequester;
+              surveys.push(marker);
+
+            }
 
           }
 
@@ -278,14 +308,16 @@
            */
           function DialogController(properties, marker) {
               var vm = this;
-
+              var img = "https://upload.wikimedia.org/wikipedia/commons/3/35/Gujarat_Satellite_Imagery_2012.jpg";
+              $log.log(img);
               if (properties) { // Properties already exists
                 vm.surveyRequester = properties.surveyRequester;
-                vm.dateRequested = properties.dateRequested;
-                vm.surveyIdentifier = properties.surveyIdentifier;
+                vm.dateRequested = properties.dateRequested || "";
+                vm.surveyIdentifier = properties.surveyIdentifier || "";
                 vm.surveyProgress   = properties.surveyProgress || "backlog";
-                vm.surveyDescription = properties.surveyDescription;
-                vm.surveyImageryUrl = properties.surveyImageryUrl || "https://upload.wikimedia.org/wikipedia/commons/3/35/Gujarat_Satellite_Imagery_2012.jpg"; //properties.surveyImageryUrl;
+                vm.surveyDescription = properties.surveyDescription || "";
+                vm.surveyImageryUrl = properties.surveyImageryUrl || "";
+                vm.surveyDataFormat = properties.surveyDataFormat || "tif";
               }
               else { // Creating dialog for the first time
                 vm.surveyRequester = ""; // Perhaps  try to auto complete?
@@ -294,13 +326,17 @@
                 vm.surveyProgress   = "backlog";
                 vm.surveyDescription = "";
                 vm.surveyImageryUrl = "";
+                vm.surveyDataFormat = "tif";
               }
 
               vm.surveyProgressChange = surveyProgressChange;
               vm.closeDialog = closeDialog;
 
               function surveyProgressChange() {
-                marker.changeMarkerProgress(vm.surveyProgress);
+                if (marker) {
+
+                  marker.changeMarkerProgress(vm.surveyProgress);
+                }
               }
 
               function closeDialog() {
@@ -310,7 +346,8 @@
                   "surveyIdentifier"  : vm.surveyIdentifier,
                   "surveyProgress"    : vm.surveyProgress,
                   "surveyDescription" : vm.surveyDescription,
-                  "surveyImageryUrl"  : vm.surveyImageryUrl
+                  "surveyImageryUrl"  : vm.surveyImageryUrl,
+                  "surveyDataFormat"  : vm.surveyDataFormat
                 });
               }
 
