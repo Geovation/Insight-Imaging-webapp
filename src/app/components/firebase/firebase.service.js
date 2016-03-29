@@ -134,7 +134,6 @@
     function isAdmin(cb) {
       var uid = service.firebase.getAuth().uid;
       return new Promise(function (resolve, reject) {
-        console.log(uid);
         service.firebase.child('admins').child(uid)
           .once('value',
             function(response){
