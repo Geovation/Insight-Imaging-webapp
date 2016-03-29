@@ -218,17 +218,17 @@
            * @return {Object}               - The marker and the circle
            */
           function createMarker(surveyDetails, key, progress) {
+            if (surveyDetails.coords) {
+              var icon = droneIcon.extend({ options: {  } });
+              var marker = L.marker(surveyDetails.coords, { key: key, icon: new icon() });
 
-            var icon = droneIcon.extend({ options: {  } });
-            var marker = L.marker(surveyDetails.coords, { key: key, icon: new icon() });
+              var circleColor = progressColors[progress];
 
-            var circleColor = progressColors[progress];
+              var circleOptions = { color: circleColor, fillColor: circleColor, fillOpacity: 0.5 };
+              var circle = new L.circle(surveyDetails.coords, 50, circleOptions);
 
-            var circleOptions = { color: circleColor, fillColor: circleColor, fillOpacity: 0.5 };
-            var circle = new L.circle(surveyDetails.coords, 50, circleOptions);
-
-            return { marker : marker, circle : circle };
-
+              return { marker : marker, circle : circle };
+            }
           }
 
           /**
@@ -244,57 +244,60 @@
               var progress = props.surveyProgress;
 
               var droneMarkers = createMarker(surveyDetails, key, progress);
-              var marker = droneMarkers.marker;
-              var circle = droneMarkers.circle;
 
-              // Change style to see through when we delete and then visible when we add
-              marker.on('remove', function () {
-                circle.setStyle({ opacity: 0, fillOpacity: 0 });
-              });
-              marker.on('add', function () {
-                circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
-              });
+              if (droneMarkers) {
+                var marker = droneMarkers.marker;
+                var circle = droneMarkers.circle;
+                // Change style to see through when we delete and then visible when we add
+                marker.on('remove', function () {
+                  circle.setStyle({ opacity: 0, fillOpacity: 0 });
+                });
+                marker.on('add', function () {
+                  circle.setStyle({ opacity: 1, fillOpacity: 0.5 });
+                });
 
-              // If we click on a marker and not deleting show the dialog box with the marker info
-              marker.on('click', function(){
-                if (!deleting && !editing) {
-                  showDialog(props, marker).then(function(updatedProperties){
-                    marker.droneIdentifier = updatedProperties.surveyIdentifier;
-                    props = updatedProperties; // Update clientside marker properties
-                    console.log(updatedProperties);
-                    firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
-                  });
-                }
-              });
+                // If we click on a marker and not deleting show the dialog box with the marker info
+                marker.on('click', function(){
+                  if (!deleting && !editing) {
+                    showDialog(props, marker).then(function(updatedProperties){
+                      marker.droneIdentifier = updatedProperties.surveyIdentifier;
+                      props = updatedProperties; // Update clientside marker properties
+                      console.log(updatedProperties);
+                      firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
+                    });
+                  }
+                });
 
-              marker.changeMarkerProgress = function(progress) {
-                var circleColor = progressColors[progress];
-                var icon = droneIcon.extend({ options: { className: 'marker-' + progress } });
-                marker.setIcon( new icon() );
-                circle.setStyle({ color: circleColor, fillColor: circleColor });
-              };
+                marker.changeMarkerProgress = function(progress) {
+                  var circleColor = progressColors[progress];
+                  var icon = droneIcon.extend({ options: { className: 'marker-' + progress } });
+                  marker.setIcon( new icon() );
+                  circle.setStyle({ color: circleColor, fillColor: circleColor });
+                };
 
-              // Code for moving the circle along with the marker during editing
-              marker.on('mousedown', function () {
-               if (editing) {
-                 map.on('mousemove', function (e) {
-                   circle.setLatLng(e.latlng);
-                 });
-               }
-              });
-              map.on('mouseup',function(e){
-                map.removeEventListener('mousemove');
-              });
+                // Code for moving the circle along with the marker during editing
+                marker.on('mousedown', function () {
+                 if (editing) {
+                   map.on('mousemove', function (e) {
+                     circle.setLatLng(e.latlng);
+                   });
+                 }
+                });
+                map.on('mouseup',function(e){
+                  map.removeEventListener('mousemove');
+                });
 
-              // Add everything to the map
-              drawnItems.addLayer(marker);
-              map.addLayer(circle);
-              marker.bindLabel(props.surveyRequester || "A Drone Survey");
-              map.addLayer(marker);
+                // Add everything to the map
+                drawnItems.addLayer(marker);
+                map.addLayer(circle);
+                marker.bindLabel(props.surveyRequester || "A Drone Survey");
+                map.addLayer(marker);
 
-              marker.surveyIdentifier = props.surveyIdentifier;
-              marker.surveyRequester  = props.surveyRequester;
-              surveys.push(marker);
+                marker.surveyIdentifier = props.surveyIdentifier;
+                marker.surveyRequester  = props.surveyRequester;
+                surveys.push(marker);
+
+              }
 
             }
 
