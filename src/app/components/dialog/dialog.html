@@ -2,22 +2,22 @@
     <h1> Survey Details </h1>
     <md-input-container class="md-block" flex-gt-xs >
         <label class="ii-labels">Survey Requester (Required)</label>
-        <input type="text" ng-model="vm.surveyRequester" value="{{vm.surveyRequester}}" required="true">
+        <input class="ii-inputs" type="text" ng-model="vm.surveyRequester" value="{{vm.surveyRequester}}" required="true">
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
         <label class="ii-labels"> Survey Request Date </label>
-        <input disabled type="text" value="{{ vm.dateRequested | date : 'dd/MM/yy - hh:mm:ss' }}">
+        <input class="ii-inputs" disabled type="text" value="{{ vm.dateRequested | date : 'dd/MM/yy - hh:mm:ss' }}">
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
         <label class="ii-labels"> Survey Identifier (Required)</label>
-        <input ng-model="vm.surveyIdentifier" flex="100" type="text" required="true">
+        <input class="ii-inputs" ng-model="vm.surveyIdentifier" flex="100" type="text" required="true">
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
         <label class="ii-labels"> Survey Description </label>
-        <textarea class="description" ng-model="vm.surveyDescription" type="text" ></textarea>
+        <textarea class="ii-inputs" class="description" ng-model="vm.surveyDescription" type="text" ></textarea>
     </md-input-container>
 
     <md-input-container class="md-block" flex-gt-xs>
@@ -56,7 +56,7 @@
 
     <md-input-container class="md-block" flex-gt-xs ng-if="vm.surveyProgress == 'completed'">
       <label class="ii-labels"> Survey URL </label>
-      <input ng-model="vm.surveyImageryUrl" flex="100" type="text">
+      <input class="ii-inputs" ng-model="vm.surveyImageryUrl" flex="100" type="text">
     </md-input-container>
 
 
