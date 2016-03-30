@@ -1,16 +1,20 @@
 <section layout="row" layout-align="center center" >
-  <md-content layout="column" layout-align="center" layout-padding class="login md-whiteframe-5dp" flex="33">
+  <md-content layout="column" layout-align="center" layout-padding class="ii-login login md-whiteframe-5dp" flex="none">
+    <div flex="none" layout-padding layout-align="center center" layout="column" class="ii-title">
+      <span class="ii-title-yellow">Pod</span>
+      <span class="ii-title-blue">Cloud</span>
+    </div>
     <div layout="column" layout-align="center center">
       <p class="logo--big__text">PodCloud</p>
       <span>Please sign in</span>
     </div>
     <form name="loginForm" flex layout="column">
       <md-input-container flex class="md-input-container--closer">
-        <label>Email</label>
+        <label class="ii-labels">Email</label>
         <input type="email" ng-model="vmIndex.email" name="email" required ng-minlength="1" md-maxlength="50">
       </md-input-container>
       <md-input-container flex class="md-input-container--closer">
-        <label>Password</label>
+        <label class="ii-labels">Password</label>
         <input type="password" ng-model="vmIndex.password" name="password" required ng-minlength="1" md-maxlength="10">
       </md-input-container>
       <h1 layout="column" layout-align="center">
