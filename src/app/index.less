@@ -71,10 +71,10 @@ md-toolbar.md-default-theme {
 }
 
 button, span, h4, h5{
-  color : #0d4fa6 !important;
+  color : #0d4fa6 ;
 }
 
-md-input-container label {
+md-input-container label.ii-labels {
   color : #ffc000 !important;
 }
 
@@ -123,10 +123,18 @@ md-input-container.search-mode > label {
 }
 
 .leaflet-control-zoom a, .leaflet-bar-part.leaflet-bar-part-single {
-  color : #0d4fa6 !important;
-  background-color: black !important;
+  color : #0d4fa6 ;
+  background-color: black ;
 }
 
+.leaflet-retina .leaflet-draw-toolbar a {
+  background-image: url('../../../app/main/assets/spritesheet-blue.png');
+  background-color:black;
+}
+.leaflet-retina .leaflet-control-layers-toggle {
+  background-image: url('../../../app/main/assets/layers-blue.png');
+  background-color: black;
+}
 .leaflet-bar a, .leaflet-bar a:hover, .leaflet-draw-actions a {
   border-bottom: 0;
   border-left: 0;
@@ -168,12 +176,12 @@ md-input-container.search-mode > label {
 }
 
 input, input[disabled], textarea {
-  background-color: white !important;
-  color: black !important;
+  background-color: white;
+  color: black ;
 }
 
 input[disabled] {
-  background-color: grey !important;
+  background-color: grey ;
   color: darkgray;
 }
 
@@ -185,7 +193,7 @@ md-dialog {
 span.ii-title-yellow {
   font-size: 24px;
   margin: 0px;
-  color : #ffc000 !important;
+  color : #ffc000 ;
   display: inline-block;
   vertical-align: middle;
   font-size: 15px;
@@ -196,7 +204,7 @@ span.ii-title-yellow {
 span.ii-title-blue {
   font-size: 24px;
   margin: 0px;
-  color : #0d4fa6 !important;
+  color : #0d4fa6 ;
 
   display: inline-block;
   vertical-align: middle;
@@ -207,7 +215,7 @@ span.ii-title-blue {
 div.ii-title {
   display: inline-block;
   vertical-align: middle;
-
+  margin: auto;
   font-size: 30px;
 }
 
@@ -228,8 +236,9 @@ div.ii-title {
 
 .ii-search {
   padding: 0px;
+  font-size: 16px;
   background-color: rgba(95,95,95,0.2);
-  color : #0d4fa6 !important;
+  color : #0d4fa6 ;
   border: 1px solid rgba(95,95,95,0.2);
 }
 

@@ -1,16 +1,17 @@
 <div ng-controller="IndexController as vm" layout-fill layout="column">
 
-  <md-toolbar layout-sm="column" layout="row" class="navigation-bar" flex="none" >
+  <md-toolbar layout-md="column" layout-sm="column" layout="row" class="navigation-bar" flex="none" >
 
-      <div layout-padding layout-align="center center" layout="column" class="ii-title">
-        <span class="ii-title-yellow">Pod</span> <span class="ii-title-blue">Cloud</span>
+      <div flex="none" layout-padding layout-align="center center" layout="column" class="ii-title">
+        <span class="ii-title-yellow">Pod</span>
+        <span class="ii-title-blue">Cloud</span>
       </div>
 
       <span flex="5"></span>
 
       <div layout-padding layout-align="center center" layout="column">
        <md-input-container layout-align="center center" layout="column" class="search-mode">
-        <label>Search Mode</label>
+        <label class="ii-labels">Search Mode</label>
         <md-select ng-model="vm.searchMode">
           <md-option selected="selected" value="surveyRequester">
             Survey Requester
@@ -29,8 +30,13 @@
       <span flex></span>
 
       <div layout-padding layout-align="center center" layout="column">
-        <md-button layout-align="end center" class="md-primary" ng-if="vm.userAuth" ng-click="vm.deauthenticate()">
-          Log out ({{vm.userAuth.password.email}})
+        <md-button
+          layout-align="end center"
+           class="md-primary"
+           ng-if="vm.userAuth"
+           ng-click="vm.deauthenticate()"
+           >
+          Log Out ({{vm.userAuth.password.email}})
         </md-button>
       </div>
 
