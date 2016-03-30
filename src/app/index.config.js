@@ -3,7 +3,7 @@
 
   angular
     .module('insight-imaging-webapp')
-    .config(theme);
+    .config(config);
 
   /** @ngInject */
   function config($logProvider, toastrConfig) {
