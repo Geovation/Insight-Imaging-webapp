@@ -47,7 +47,7 @@
 html, body {
   height: 100%;
   font-family: 'Roboto', serif;
-  background-color: #272727;
+
 }
 
 [layout=row] {
@@ -67,13 +67,21 @@ html, body {
 }
 
 md-toolbar.md-default-theme {
-  background-color: #272727;
+//  background-color: #272727;
+}
+
+button, span, h4, h5{
+  color : #0d4fa6 !important;
+}
+
+md-input-container label {
+  color : #ffc000 !important;
 }
 
 section.jumbotron {
   margin-bottom: 30px;
   padding: 1px 30px;
-  background-color: #272727;
+
   text-align: center;
 
   color: white;
@@ -103,20 +111,27 @@ md-input-container.search-mode {
 
 md-input-container.search-mode > md-select > md-select-value > span {
   width: 210px;
-  color: white !important;
+  color : #0d4fa6;
   font-size: 20px;
 }
 
 md-input-container.search-mode > label {
   width: 210px;
-  color: white !important;
+  color : #0d4fa6;
   font-size: 16px;
   left: -15px;
 }
 
-.locate-button {
-  //content: "location_searching";
+.leaflet-control-zoom a, .leaflet-bar-part.leaflet-bar-part-single {
+  color : #0d4fa6 !important;
+  background-color: black !important;
 }
+
+.leaflet-bar a, .leaflet-bar a:hover, .leaflet-draw-actions a {
+  border-bottom: 0;
+  border-left: 0;
+}
+
 
 .locate-button-spinning {
   //content: "my_location";
@@ -152,9 +167,48 @@ md-input-container.search-mode > label {
     to {transform:rotate(360deg);}
 }
 
-.ii-title {
+input, input[disabled], textarea {
+  background-color: white ;
+  color: black !important;
+}
+
+input[disabled] {
+  background-color: grey !important;
+  color: darkgray;
+}
+
+
+md-dialog {
+  background-color: black;
+}
+
+span.ii-title-yellow {
   font-size: 24px;
   margin: 0px;
+  color : #ffc000 !important;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 15px;
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+span.ii-title-blue {
+  font-size: 24px;
+  margin: 0px;
+  color : #0d4fa6 !important;
+
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 35px;
+
+}
+
+div.ii-title {
+  display: inline-block;
+  vertical-align: middle;
+
+  font-size: 30px;
 }
 
 .marker-backlog {
@@ -175,12 +229,8 @@ md-input-container.search-mode > label {
 .ii-search {
   padding: 0px;
   background-color: rgba(95,95,95,0.2);
-  color: white;
+  color : #0d4fa6 !important;
   border: 1px solid rgba(95,95,95,0.2);
-}
-
-.ii-search:disabled {
-  color: red;
 }
 
 .ii-search:focus {
