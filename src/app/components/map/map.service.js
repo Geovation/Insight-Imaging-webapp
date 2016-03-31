@@ -275,8 +275,8 @@
                 // Code for moving the circle along with the marker during editing
                 marker.on('mousedown', function () {
                  if (editing) {
-                   map.on('mousemove', function (e) {
-                     circle.setLatLng(e.latlng);
+                   map.on('mousemove', function () {
+                     circle.setLatLng(marker.getLatLng());
                    });
                  }
                 });
