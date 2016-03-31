@@ -23,11 +23,9 @@
       'OSM': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     })
     .constant('progressColors', {
-      'backlog'   : '#FF6060',
-      'ordered'   : '#FBFD8F',
-      'completed' : '#9CFD8F'
+      'backlog'   : '#2D2D2D',
+      'ordered'   : '#ffc000',
+      'completed' : '#21BCEF'
     });
-
-
 
 })();
