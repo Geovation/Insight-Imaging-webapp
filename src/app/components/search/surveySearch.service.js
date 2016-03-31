@@ -24,10 +24,10 @@
        * @param  {type} vmDroneIdentifier - a list of all the markers for drones
        */
       function searchSurveys(searchMode, searchCriteria){
-
+        console.log(searchMode);
         var surveys = mapService.getSurveys();
         var map = mapService.returnMap();
-
+        console.log(surveys);
         for (var i=0; i < surveys.length; i++){
 
           var survey = surveys[i];
@@ -39,13 +39,11 @@
               map.removeLayer(survey);
             }
           }
-          else if (surveyIdentifier.indexOf(searchCriteria) != -1) {
-
+          else if (surveyIdentifier.indexOf(searchCriteria) != -1 || !searchCriteria) {
+            console.log(survey);
             map.addLayer(survey); // If the input matches a part of the Identifier
           }
-          else if (!searchCriteria) {
-            map.addLayer(survey);
-          }
+
         }
 
       }
