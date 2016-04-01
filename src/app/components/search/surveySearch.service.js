@@ -27,25 +27,24 @@
 
         var surveys = mapService.getSurveys();
         var map = mapService.returnMap();
+        var survey, surveyIdentifier, contains;
 
         for (var i=0; i < surveys.length; i++){
 
-          var survey = surveys[i];
-          var surveyIdentifier = survey[searchMode].toLowerCase();
+          survey = surveys[i];
+          surveyIdentifier = survey[searchMode].toLowerCase();
+          contains = surveyIdentifier.indexOf(searchCriteria);
           searchCriteria = searchCriteria.toLowerCase();
 
-          if (searchCriteria && surveyIdentifier.indexOf(searchCriteria) === -1 ) { // If the input doest match any part of the Identifier
+          if (searchCriteria && contains === -1 ) { // If the input doest match any part of the Identifier
             if (map.hasLayer(survey)) {
               map.removeLayer(survey);
             }
           }
-          else if (surveyIdentifier.indexOf(searchCriteria) != -1) {
-
+          else if (contains !== -1 || !searchCriteria) {
             map.addLayer(survey); // If the input matches a part of the Identifier
           }
-          else if (!searchCriteria) {
-            map.addLayer(survey);
-          }
+
         }
 
       }

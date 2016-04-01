@@ -160,14 +160,14 @@
               properties: undefined
             };
 
-            showDialog().then(function(vmSurveyDetails){
-              surveyDetails.properties = vmSurveyDetails;
+          showDialog().then(function(vmSurveyDetails){
+            surveyDetails.properties = vmSurveyDetails;
 
-              firebaseService.saveMarker(surveyDetails)
-                .then(function (result) {
-                  addMarker(result.key(), surveyDetails);
-                });
-            });
+            firebaseService.saveMarker(surveyDetails)
+              .then(function (result) {
+                addMarker(result.key(), surveyDetails);
+              });
+          });
 
           });
 
@@ -241,11 +241,11 @@
             if (props) {
               var progress = props.surveyProgress;
 
-              var droneMarkers = createMarker(surveyDetails, key, progress);
+              var surveyMarkers = createMarker(surveyDetails, key, progress);
 
-              if (droneMarkers) {
-                var marker = droneMarkers.marker;
-                var circle = droneMarkers.circle;
+              if (surveyMarkers) {
+                var marker = surveyMarkers.marker;
+                var circle = surveyMarkers.circle;
                 // Change style to see through when we delete and then visible when we add
                 marker.on('remove', function () {
                   circle.setStyle({ opacity: 0, fillOpacity: 0 });
@@ -256,9 +256,12 @@
 
                 // If we click on a marker and not deleting show the dialog box with the marker info
                 marker.on('click', function(){
+
                   if (!deleting && !editing) {
-                    showDialog(props, marker).then(function(updatedProperties){
-                      marker.droneIdentifier = updatedProperties.surveyIdentifier;
+
+                    showDialog(props, marker).then(function(updatedProperties) {
+                      marker.surveyIdentifier = updatedProperties.surveyIdentifier;
+                      marker.surveyRequester = updatedProperties.surveyRequester;
                       props = updatedProperties; // Update clientside marker properties
                       firebaseService.updateMarkerProperties(key, updatedProperties); // Update firebase marker properties
                     });
@@ -334,7 +337,6 @@
 
               function surveyProgressChange() {
                 if (marker) {
-
                   marker.changeMarkerProgress(vm.surveyProgress);
                 }
               }
