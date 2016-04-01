@@ -260,7 +260,6 @@
                   if (!deleting && !editing) {
 
                     showDialog(props, marker).then(function(updatedProperties) {
-                      console.log(marker);
                       marker.surveyIdentifier = updatedProperties.surveyIdentifier;
                       marker.surveyRequester = updatedProperties.surveyRequester;
                       props = updatedProperties; // Update clientside marker properties
