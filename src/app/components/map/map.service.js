@@ -6,7 +6,7 @@
     .factory('mapService', mapService);
 
   /** @ngInject */
-  function mapService($log, L, baseLayersService, firebaseService, $mdDialog, progressColors) {
+  function mapService($log, L, baseLayersService, firebaseService, $mdDialog, progressColors, mapConfig) {
       var map;
       var drawnItems;
       var surveys = [];
@@ -49,8 +49,8 @@
           var editing;
 
           map = L.map('map', {
-            center: [51.5252, -0.0902],
-            zoom: 18,
+            center: mapConfig["center"],
+            zoom: mapConfig["zoom"],
             layers: [ baseLayers["OS Road"] ]
           });
 
@@ -61,12 +61,12 @@
 
           // Geolocation
           L.control.locate({
-            icon: 'material-icons locate-button',
-            iconLoading: 'material-icons locate-button-spinning'
+            icon: mapConfig["locateIcon"],
+            iconLoading: mapConfig["locateIconSpin"]
           }).addTo(map);
           var geolocate = document.querySelector(".leaflet-control-locate .material-icons");
           geolocate.innerHTML = "location_searching"; // Change to the Material Design search icon
-          map.on('locationfound', function(){
+          map.on('locationfound', function() {
             geolocate.innerHTML = "my_location"; // Change icon to a Material Design located icon
           });
 
@@ -125,36 +125,38 @@
               $log.log("User");
               map.whenReady(function () {
                 firebaseService.loadUserMarkers().then(function (surveys) {
-                  if (surveys) Object.keys(surveys).forEach(function (key) {
-                    addMarker(key, surveys[key]);
-                  });
+                  if (surveys) {
+                    Object.keys(surveys).forEach(function (key) {
+                      addMarker(key, surveys[key]);
+                    });
+                  }
                 });
               });
             }
           });
 
           var search = document.getElementsByClassName("ii-search")[0];
-          map.on('draw:deletestart', function (event) {
+          map.on('draw:deletestart', function () {
             deleting = true;
             search.disabled = true;
             search.style.opacity = 0.15;
           });
 
-          map.on('draw:deletestop', function(event) {
+          map.on('draw:deletestop', function() {
             deleting = false;
             search.disabled = false;
             search.style.opacity = 1;
           });
 
-          map.on('draw:editstart', function (event) {
+          map.on('draw:editstart', function () {
             editing = true;
           });
 
-          map.on('draw:editstop', function(event) {
+          map.on('draw:editstop', function() {
             editing = false;
           });
 
-          map.on('draw:created', function (event) {
+          map.on('draw:created', function () {
             var surveyDetails = {
               coords: event.layer._latlng,
               properties: undefined
@@ -198,7 +200,6 @@
               templateUrl: "app/components/dialog/dialog.html",
               controller : DialogController,
               controllerAs : "vm",
-              parent : angular.element(document.body),
               bindToController : true,
               locals: {
                  properties : properties,

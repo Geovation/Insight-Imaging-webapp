@@ -26,6 +26,12 @@
       'backlog'   : '#2D2D2D',
       'ordered'   : '#ffc000',
       'completed' : '#21BCEF'
+    })
+    .constant('mapConfig', {
+      'zoom'   :  18,
+      'center' : [51.5252, -0.0902],
+      'locateIcon' : 'material-icons locate-button',
+      'locateIconSpin' : 'material-icons locate-button-spinning',
     });
 
 })();
