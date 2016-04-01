@@ -198,6 +198,7 @@
               templateUrl: "app/components/dialog/dialog.html",
               controller : DialogController,
               controllerAs : "vm",
+              parent : angular.element(document.body),
               bindToController : true,
               locals: {
                  properties : properties,
