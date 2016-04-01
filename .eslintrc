@@ -8,6 +8,6 @@
   "globals": {
     "angular": true,
     "module": true,
-    "inject": true
+    "inject": true,
   }
 }
