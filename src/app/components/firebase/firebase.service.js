@@ -6,10 +6,10 @@
     .factory('firebaseService', firebaseService);
 
   /** @ngInject */
-  function firebaseService(Firebase, messageService, $firebaseAuth) {
+  function firebaseService(Firebase, firebaseUsername, messageService, $firebaseAuth, $q) {
 
     var vm = this;
-    var firebase = new Firebase('https://insight-imaging-dev.firebaseio.com');
+    var firebase = new Firebase(firebaseUsername);
 
     var service = {
       firebase: firebase,
@@ -95,7 +95,7 @@
      */
     function updateMarkerProperties(markerKey, properties) {
       var uid = service.firebase.getAuth().uid;
-      return new Promise(function (resolve, reject) {
+      return $q(function (resolve, reject) {
         service.firebase.child('users').child(uid).child('jobs')
           .child(markerKey).child("properties").set(properties);
       });
@@ -108,7 +108,7 @@
      */
     function deleteMarker(markerKey) {
       var uid = service.firebase.getAuth().uid;
-      return new Promise(function (resolve, reject) {
+      return $q(function (resolve, reject) {
         service.firebase.child('users').child(uid).child('jobs')
           .child(markerKey).remove(resolve);
       });
@@ -121,12 +121,12 @@
     function loadUserMarkers() {
       var uid = service.firebase.getAuth().uid;
       if (uid) {
-        return new Promise(function (resolve, reject) {
+        return $q(function (resolve, reject) {
           service.firebase.child('users').child(uid).child('jobs')
             .on('value', function (response) { resolve(response.val()); });
         });
       }
-      else { 
+      else {
         deauthenticate();
       }
     }
@@ -139,7 +139,7 @@
     function isAdmin() {
       var uid = service.firebase.getAuth().uid;
       if (uid) {
-        return new Promise(function (resolve, reject) {
+        return $q(function (resolve, reject) {
           service.firebase.child('admins').child(uid)
             .once('value',
               function(response){
@@ -161,7 +161,7 @@
      * @returns {Promise<array<object>>} A promised array of marker objects.
      */
     function loadAllUserMarkers() {
-      return new Promise(function (resolve, reject) {
+      return $q(function (resolve, reject) {
         service.firebase.child('users')
           .on('value', function (response) { resolve(response.val()); });
       });
