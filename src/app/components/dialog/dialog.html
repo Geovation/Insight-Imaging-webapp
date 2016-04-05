@@ -22,37 +22,40 @@
           <textarea class="ii-inputs" class="description" ng-model="vm.surveyDescription" type="text" ></textarea>
       </md-input-container>
 
-      <md-input-container flex-gt-xs>
-       <label class="ii-labels">Survey Data Format</label>
-       <md-select ng-model="vm.surveyDataFormat" ng-disabled="vm.surveyProgress == 'completed' && vm.surveyDataFormat">
-         <md-option value="tif">
-           TIF
-         </md-option>
-         <md-option value="png">
-           PNG
-         </md-option>
-       </md-select>
-     </md-input-container>
 
-      <md-input-container flex-gt-xs>
-       <label class="ii-labels">Status</label>
-       <md-select ng-model="vm.surveyProgress" ng-change="vm.surveyProgressChange()">
-         <md-option value="backlog">
-           Setting Up - Not Ordered
-         </md-option>
-         <md-option value="ordered">
-           Ordered
-         </md-option>
-         <md-option value="completed">
-           Data Received
-         </md-option>
-       </md-select>
-     </md-input-container>
+      <div flex="100">
+          <md-input-container flex="40" layout-fill>
+           <label class="ii-labels">Survey Data Format</label>
+           <md-select ng-model="vm.surveyDataFormat" ng-disabled="vm.surveyProgress == 'completed' && vm.surveyDataFormat">
+             <md-option value="tif">
+               TIF
+             </md-option>
+             <md-option value="png">
+               PNG
+             </md-option>
+           </md-select>
+         </md-input-container>
+
+          <md-input-container flex="40" layout-fill>
+           <label class="ii-labels">Status</label>
+           <md-select ng-model="vm.surveyProgress" ng-change="vm.surveyProgressChange()">
+             <md-option value="backlog">
+               Setting Up - Not Ordered
+             </md-option>
+             <md-option value="ordered">
+               Ordered
+             </md-option>
+             <md-option value="completed">
+               Data Received
+             </md-option>
+           </md-select>
+         </md-input-container>
+      </div>
 
      <md-input-containerflex-gt-xs ng-if="vm.surveyImageryUrl && vm.surveyProgress == 'completed'">
        <h4> Survey Image </h4>
        <a ng-href="{{vm.surveyImageryUrl}}">
-         <img ng-src="{{vm.surveyImageryUrl}}" class="survey-img">
+         <img flex="100" ng-src="{{vm.surveyImageryUrl}}" >
        </a>
      </md-input-container>
 
