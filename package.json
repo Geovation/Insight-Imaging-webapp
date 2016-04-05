@@ -56,7 +56,7 @@
     "node": ">=0.10.0"
   },
   "jshintConfig" : {
-    "sub" : false
+    "sub" : true
   }
 
 }
