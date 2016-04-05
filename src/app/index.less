@@ -49,10 +49,6 @@ html, body {
   font-family: 'Roboto', serif;
 }
 
-[layout=row] {
-  flex-direction: row;
-}
-
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -69,6 +65,11 @@ html, body {
 // Colors
 @primary-text: #21BCEF;
 @secondary-text: #ffc000;
+
+.ii-emails {
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+}
 
 md-dialog-content > h1 {
   color: @primary-text;
@@ -127,7 +128,7 @@ md-input-container.search-mode > label {
   width: 210px;
   color : @primary-text;
   font-size: 16px;
-  left: -15px;
+      padding-left: 12px !important;
 }
 
 .leaflet-control-zoom a, .leaflet-bar-part.leaflet-bar-part-single {
@@ -136,12 +137,12 @@ md-input-container.search-mode > label {
 }
 
 .leaflet-draw-toolbar a {
-  background-image: url('../../../app/main/assets/spritesheet-blue.png');
+  background-image: url('../../../app/main/assets/spritesheet-blue.png') !important;
   background-color: black;
 }
 
 .leaflet-control-layers-toggle {
-  background-image: url('../../../app/main/assets/layers-blue.png');
+  background-image: url('../../../app/main/assets/layers-blue.png') !important;
   background-color: black;
   background-size: contain;
   border-radius: 3px;
@@ -279,7 +280,8 @@ div.ii-title {
 }
 
 .ii-survey-dialog {
-  width: 400px;
+  z-index: 1000;
+  background-color:#3A3A3A;
 }
 
 img.survey-img {

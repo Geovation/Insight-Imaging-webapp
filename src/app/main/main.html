@@ -1,13 +1,29 @@
 <div ng-controller="IndexController as vm" layout-fill layout="column">
 
-  <md-toolbar layout-md="column" layout-sm="column" layout="row" class="navigation-bar" flex="none" >
+  <md-toolbar layout-sm="column" layout-xs="column" layout="row" class="navigation-bar" flex="none" >
 
-      <div flex="none" layout-padding layout-align="center center" layout="column" class="ii-title">
+    <div layout="row" layout-xs="column">
+      <div flex="none" layout-padding layout-align="start center" layout="column" class="ii-title">
         <span class="ii-title-yellow">Pod</span>
         <span class="ii-title-blue">Cloud</span>
       </div>
 
       <span flex="5"></span>
+      <div layout-padding layout-align="center center" layout="column">
+        <md-button
+          layout-align="end center"
+           class="md-primary"
+           ng-if="vm.userAuth"
+           ng-click="vm.deauthenticate()"
+           >
+          Log Out <span class="ii-email">({{vm.userAuth.password.email}})</span>
+        </md-button>
+      </div>
+
+
+    </div>
+
+    <div layout="row" flex="100" layout-align="end center" layout-xs="column">
 
       <div layout-padding layout-align="center center" layout="column">
        <md-input-container layout-align="center center" layout="column" class="search-mode">
@@ -21,25 +37,17 @@
           </md-option>
         </md-select>
       </md-input-container>
-     </div >
+
+     </div>
 
      <div layout-padding layout-align="center center" layout="column">
        <input placeholder="Search for surveys..." class="ii-search" flex ng-model="vm.searchCriteria" ng-change="vm.searchSurveys(vm.searchMode, vm.searchCriteria)">
      </div>
 
-      <span flex></span>
 
-      <div layout-padding layout-align="center center" layout="column">
-        <md-button
-          layout-align="end center"
-           class="md-primary"
-           ng-if="vm.userAuth"
-           ng-click="vm.deauthenticate()"
-           >
-          Log Out ({{vm.userAuth.password.email}})
-        </md-button>
-      </div>
 
+
+    </div>
   </md-toolbar>
 
   <main id="map" flex="auto"></main>
