@@ -156,21 +156,21 @@
             editing = false;
           });
 
-          map.on('draw:created', function () {
-            var surveyDetails = {
-              coords: event.layer._latlng,
-              properties: undefined
-            };
+          map.on('draw:created', function (event) {
+            if (event.layer && event.layer._latlng) {
+              var surveyDetails = {
+                coords: event.layer._latlng,
+                properties: undefined
+              };
+              showDialog().then(function(vmSurveyDetails){
+                surveyDetails.properties = vmSurveyDetails;
 
-          showDialog().then(function(vmSurveyDetails){
-            surveyDetails.properties = vmSurveyDetails;
-
-            firebaseService.saveMarker(surveyDetails)
-              .then(function (result) {
-                addMarker(result.key(), surveyDetails);
+                firebaseService.saveMarker(surveyDetails)
+                  .then(function (result) {
+                    addMarker(result.key(), surveyDetails);
+                  });
               });
-          });
-
+            }
           });
 
           map.on('draw:deleted', function (event) {
