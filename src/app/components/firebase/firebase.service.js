@@ -6,10 +6,10 @@
     .factory('firebaseService', firebaseService);
 
   /** @ngInject */
-  function firebaseService(Firebase, messageService, $firebaseAuth, $q) {
+  function firebaseService(Firebase, firebaseUsername, messageService, $firebaseAuth, $q) {
 
     var vm = this;
-    var firebase = new Firebase('https://insight-imaging-dev.firebaseio.com');
+    var firebase = new Firebase(firebaseUsername);
 
     var service = {
       firebase: firebase,

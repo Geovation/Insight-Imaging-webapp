@@ -5,6 +5,7 @@
   angular
     .module('insight-imaging-webapp')
     .constant('Firebase', Firebase)
+    .constant('firebaseUsername', 'https://insight-imaging-dev.firebaseio.com')
     .constant('L', L)
     .constant('osKey', 'FBgTnDiN4gVpi2a1tGAnWpvXEXcnHOlN')
     .constant('baseLayerUrl', {
